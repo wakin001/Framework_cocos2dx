@@ -897,6 +897,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		735EDBED1761D35F00FC4E5E /* URLRequest */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = URLRequest;
+			sourceTree = "<group>";
+		};
 		73F9167A17619165004BDFEB = {
 			isa = PBXGroup;
 			children = (
@@ -2032,6 +2039,7 @@
 		73F91A0417619329004BDFEB /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				735EDBED1761D35F00FC4E5E /* URLRequest */,
 				73F91A0517619329004BDFEB /* Animation */,
 				73F91A0E17619329004BDFEB /* Core */,
 				73F91A1217619329004BDFEB /* MVC */,
@@ -2573,6 +2581,7 @@
 				73F91A031761916D004BDFEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

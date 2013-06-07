@@ -26,6 +26,9 @@ public:
     
     virtual bool                init(FWAbstractModel * model = NULL);
     
+    void                        testURLRequest();
+    void                        onHttpRequestCompleted(cocos2d::CCObject *pSender, void *data);
+    
 private:
     
 };
