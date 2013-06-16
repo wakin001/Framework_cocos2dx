@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Framework_Cocos2dx.xcscheme</key>
+		<key>Framework_cocos2dx.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0AF422A6175B811800737BD5</key>
+		<key>73F9168217619165004BDFEB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -16,12 +16,21 @@ class FWAbstractModel : public cocos2d::CCObject
 public:
     FWAbstractModel();
     
-    ~FWAbstractModel();
+    virtual ~FWAbstractModel();
     
     
-    void parseJsonDic(cocos2d::CCDictionary *dic);
+    CREATE_FUNC(FWAbstractModel);
+    virtual bool                init();
     
-    void parseString(cocos2d::CCString *str);
+    /**
+     * Parse json dictionary data.
+     */
+    virtual void                parseJsonDic(cocos2d::CCDictionary *dic);
+    
+    /**
+     * Parse string data
+     */
+    virtual void                parseString(cocos2d::CCString *str);
     
 private:
     

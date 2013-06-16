@@ -37,8 +37,8 @@ NS_CC_BEGIN
  */
 typedef struct _ccColor3B
 {
-    GLubyte    r;
-    GLubyte    g;
+    GLubyte r;
+    GLubyte g;
     GLubyte b;
 } ccColor3B;
 
@@ -125,6 +125,12 @@ static inline ccColor4F ccc4FFromccc4B(ccColor4B c)
     return c4;
 }
 
+static inline ccColor4B ccc4BFromccc4F(ccColor4F c)
+{
+    ccColor4B ret = {(GLubyte)(c.r*255), (GLubyte)(c.g*255), (GLubyte)(c.b*255), (GLubyte)(c.a*255)};
+	return ret;
+}
+
 /** returns YES if both ccColor4F are equal. Otherwise it returns NO.
  @since v0.99.1
  */
@@ -205,21 +211,6 @@ typedef struct _ccQuad3 {
     ccVertex3F        tr;
 } ccQuad3;
 
-//! A 2D grid size
-typedef struct _ccGridSize
-{
-    int    x;
-    int    y;
-} ccGridSize;
-
-//! helper function to create a ccGridSize
-static inline ccGridSize
-ccg(const int x, const int y)
-{
-    ccGridSize v = {x, y};
-    return v;
-}
-
 //! a Point with a vertex point, a tex coord point and a color 4B
 typedef struct _ccV2F_C4B_T2F
 {
@@ -257,7 +248,18 @@ typedef struct _ccV3F_C4B_T2F
     ccTex2F            texCoords;            // 8 bytes
 } ccV3F_C4B_T2F;
 
-//! 4 ccVertex2FTex2FColor4B Quad
+//! A Triangle of ccV2F_C4B_T2F
+typedef struct _ccV2F_C4B_T2F_Triangle
+{
+	//! Point A
+	ccV2F_C4B_T2F a;
+	//! Point B
+	ccV2F_C4B_T2F b;
+	//! Point B
+	ccV2F_C4B_T2F c;
+} ccV2F_C4B_T2F_Triangle;
+
+//! A Quad of ccV2F_C4B_T2F
 typedef struct _ccV2F_C4B_T2F_Quad
 {
     //! bottom left
@@ -304,6 +306,8 @@ typedef struct _ccBlendFunc
     //! destination blend function
     GLenum dst;
 } ccBlendFunc;
+
+static const ccBlendFunc kCCBlendFuncDisable = {GL_ONE, GL_ZERO};
 
 // XXX: If any of these enums are edited and/or reordered, update CCTexture2D.m
 //! Vertical text alignment type

@@ -18,11 +18,22 @@ FWAbstractModel::~FWAbstractModel()
 {
 }
 
+bool FWAbstractModel::init()
+{   
+	return true;
+}
+
+/**
+ * Parse json dictionary data.
+ */
 void FWAbstractModel::parseJsonDic(cocos2d::CCDictionary *dic)
 {
     
 }
 
+/**
+ * Parse string data
+ */
 void FWAbstractModel::parseString(cocos2d::CCString *str)
 {
     

@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'Framework_Cocos2dx' target in the 'Framework_Cocos2dx' project
+// Prefix header for all source files of the 'Framework_cocos2dx' target in the 'Framework_cocos2dx' project
 //
 
 #ifdef __OBJC__

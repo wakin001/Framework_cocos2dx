@@ -56,7 +56,7 @@ bool CCParticleSystemQuad::initWithTotalParticles(unsigned int numberOfParticles
             return false;
         }
 
-        setupIndices();
+        initIndices();
 #if CC_TEXTURE_ATLAS_USE_VAO
         setupVBOandVAO();
 #else
@@ -103,10 +103,6 @@ CCParticleSystemQuad::~CCParticleSystemQuad()
 }
 
 // implementation CCParticleSystemQuad
-CCParticleSystemQuad * CCParticleSystemQuad::particleWithFile(const char *plistFile)
-{
-    return CCParticleSystemQuad::create(plistFile);
-}
 
 CCParticleSystemQuad * CCParticleSystemQuad::create(const char *plistFile)
 {
@@ -225,7 +221,7 @@ void CCParticleSystemQuad::setDisplayFrame(CCSpriteFrame *spriteFrame)
     }
 }
 
-void CCParticleSystemQuad::setupIndices()
+void CCParticleSystemQuad::initIndices()
 {
     for(unsigned int i = 0; i < m_uTotalParticles; ++i)
     {
@@ -324,11 +320,23 @@ void CCParticleSystemQuad::updateQuadWithParticle(tCCParticle* particle, const C
 }
 void CCParticleSystemQuad::postStep()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, m_pBuffersVBO[0] );
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(m_pQuads[0])*m_uParticleCount, m_pQuads);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    CHECK_GL_ERROR_DEBUG();
+    glBindBuffer(GL_ARRAY_BUFFER, m_pBuffersVBO[0]);
+	
+	// Option 1: Sub Data
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(m_pQuads[0])*m_uTotalParticles, m_pQuads);
+	
+	// Option 2: Data
+    //	glBufferData(GL_ARRAY_BUFFER, sizeof(quads_[0]) * particleCount, quads_, GL_DYNAMIC_DRAW);
+	
+	// Option 3: Orphaning + glMapBuffer
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(m_pQuads[0])*m_uTotalParticles, NULL, GL_STREAM_DRAW);
+	// void *buf = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	// memcpy(buf, m_pQuads, sizeof(m_pQuads[0])*m_uTotalParticles);
+	// glUnmapBuffer(GL_ARRAY_BUFFER);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+	CHECK_GL_ERROR_DEBUG();
 }
 
 // overriding draw method
@@ -347,7 +355,7 @@ void CCParticleSystemQuad::draw()
     //
     // Using VBO and VAO
     //
-    glBindVertexArray( m_uVAOname );
+    ccGLBindVAO(m_uVAOname);
 
 #if CC_REBIND_INDICES_BUFFER
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pBuffersVBO[1]);
@@ -358,8 +366,6 @@ void CCParticleSystemQuad::draw()
 #if CC_REBIND_INDICES_BUFFER
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 #endif
-
-    glBindVertexArray( 0 );
 
 #else
     //
@@ -414,6 +420,7 @@ void CCParticleSystemQuad::setTotalParticles(unsigned int tp)
             m_pIndices = indicesNew;
 
             // Clear the memory
+            // XXX: Bug? If the quads are cleared, then drawing doesn't work... WHY??? XXX
             memset(m_pParticles, 0, particlesSize);
             memset(m_pQuads, 0, quadsSize);
             memset(m_pIndices, 0, indicesSize);
@@ -442,7 +449,7 @@ void CCParticleSystemQuad::setTotalParticles(unsigned int tp)
             }
         }
 
-        setupIndices();
+        initIndices();
 #if CC_TEXTURE_ATLAS_USE_VAO
         setupVBOandVAO();
 #else
@@ -453,13 +460,19 @@ void CCParticleSystemQuad::setTotalParticles(unsigned int tp)
     {
         m_uTotalParticles = tp;
     }
+    
+    resetSystem();
 }
 
 #if CC_TEXTURE_ATLAS_USE_VAO
 void CCParticleSystemQuad::setupVBOandVAO()
 {
+    // clean VAO
+    glDeleteBuffers(2, &m_pBuffersVBO[0]);
+    glDeleteVertexArrays(1, &m_uVAOname);
+    
     glGenVertexArrays(1, &m_uVAOname);
-    glBindVertexArray(m_uVAOname);
+    ccGLBindVAO(m_uVAOname);
 
 #define kQuadSize sizeof(m_pQuads[0].bl)
 
@@ -483,7 +496,8 @@ void CCParticleSystemQuad::setupVBOandVAO()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pBuffersVBO[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_pIndices[0]) * m_uTotalParticles * 6, m_pIndices, GL_STATIC_DRAW);
 
-    glBindVertexArray(0);
+    // Must unbind the VAO before changing the element buffer.
+    ccGLBindVAO(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -493,6 +507,8 @@ void CCParticleSystemQuad::setupVBOandVAO()
 
 void CCParticleSystemQuad::setupVBO()
 {
+    glDeleteBuffers(2, &m_pBuffersVBO[0]);
+    
     glGenBuffers(2, &m_pBuffersVBO[0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_pBuffersVBO[0]);
@@ -555,7 +571,7 @@ void CCParticleSystemQuad::setBatchNode(CCParticleBatchNode * batchNode)
         if( ! batchNode ) 
         {
             allocMemory();
-            setupIndices();
+            initIndices();
             setTexture(oldBatch->getTexture());
 #if CC_TEXTURE_ATLAS_USE_VAO
             setupVBOandVAO();
@@ -580,11 +596,6 @@ void CCParticleSystemQuad::setBatchNode(CCParticleBatchNode * batchNode)
 #endif
         }
     }
-}
-
-CCParticleSystemQuad * CCParticleSystemQuad::node()
-{
-    return CCParticleSystemQuad::create();
 }
 
 CCParticleSystemQuad * CCParticleSystemQuad::create() {

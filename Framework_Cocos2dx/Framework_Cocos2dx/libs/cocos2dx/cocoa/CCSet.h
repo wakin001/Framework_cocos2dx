@@ -45,6 +45,11 @@ public:
     virtual ~CCSet(void);
 
     /**
+    * @brief Create and return a new empty set.
+    */
+    static CCSet * create();
+
+    /**
     *@brief Return a copy of the CCSet, it will copy all the elements.
     */
     CCSet* copy();
@@ -64,6 +69,10 @@ public:
     *@brief Remove the given element, nothing todo if no element equals pObject.
     */
     void removeObject(CCObject *pObject);
+    /**
+     *@brief Remove all elements of the set
+     */
+    void removeAllObjects();
     /**
     *@brief Check if CCSet contains a element equals pObject.
     */

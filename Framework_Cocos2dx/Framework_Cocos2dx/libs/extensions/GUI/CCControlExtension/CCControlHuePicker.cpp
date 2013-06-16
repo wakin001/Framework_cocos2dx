@@ -50,11 +50,6 @@ CCControlHuePicker::~CCControlHuePicker()
     CC_SAFE_RELEASE(m_slider);
 }
 
-CCControlHuePicker* CCControlHuePicker::pickerWithTargetAndPos(CCNode* target, CCPoint pos)
-{
-    return CCControlHuePicker::create(target, pos);
-}
-
 CCControlHuePicker* CCControlHuePicker::create(CCNode* target, CCPoint pos)
 {
     CCControlHuePicker *pRet = new CCControlHuePicker();
@@ -162,7 +157,7 @@ bool CCControlHuePicker::checkSliderPosition(CCPoint location)
     double distance = sqrt(pow (location.x + 10, 2) + pow(location.y, 2));
 
     // check that the touch location is within the circle
-    if (160 > distance && distance > 118)
+    if (80 > distance && distance > 59)
     {
         updateSliderPosition(location);
         return true;
@@ -172,7 +167,7 @@ bool CCControlHuePicker::checkSliderPosition(CCPoint location)
 
 bool CCControlHuePicker::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
-    if (!isEnabled())
+    if (!isEnabled() || !isVisible())
     {
         return false;
     }

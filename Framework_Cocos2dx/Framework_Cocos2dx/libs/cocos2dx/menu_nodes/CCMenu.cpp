@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "touch_dispatcher/CCTouchDispatcher.h"
 #include "touch_dispatcher/CCTouch.h"
 #include "CCStdC.h"
+#include "cocoa/CCInteger.h"
 
 #include <vector>
 #include <stdarg.h>
@@ -36,6 +37,18 @@ THE SOFTWARE.
 using namespace std;
 
 NS_CC_BEGIN
+
+static std::vector<unsigned int> ccarray_to_std_vector(CCArray* pArray)
+{
+    std::vector<unsigned int> ret;
+    CCObject* pObj;
+    CCARRAY_FOREACH(pArray, pObj)
+    {
+        CCInteger* pInteger = (CCInteger*)pObj;
+        ret.push_back((unsigned int)pInteger->getValue());
+    }
+    return ret;
+}
 
 enum 
 {
@@ -46,51 +59,21 @@ enum
 //CCMenu
 //
 
-CCMenu* CCMenu::node()
-{
-    return CCMenu::create();
-}
-
 CCMenu* CCMenu::create()
 {
     return CCMenu::create(NULL, NULL);
-}
-
-CCMenu * CCMenu::menuWithItems(CCMenuItem* item, ...)
-{
-    va_list args;
-    va_start(args,item);
-    CCMenu *pRet = new CCMenu();
-    if (pRet && pRet->initWithItems(item, args))
-    {
-        pRet->autorelease();
-        va_end(args);
-        return pRet;
-    }
-    va_end(args);
-    CC_SAFE_DELETE(pRet);
-    return NULL;
 }
 
 CCMenu * CCMenu::create(CCMenuItem* item, ...)
 {
     va_list args;
     va_start(args,item);
-    CCMenu *pRet = new CCMenu();
-    if (pRet && pRet->initWithItems(item, args))
-    {
-        pRet->autorelease();
-        va_end(args);
-        return pRet;
-    }
+    
+    CCMenu *pRet = CCMenu::createWithItems(item, args);
+    
     va_end(args);
-    CC_SAFE_DELETE(pRet);
-    return NULL;
-}
-
-CCMenu* CCMenu::menuWithArray(CCArray* pArrayOfItems)
-{
-    return CCMenu::createWithArray(pArrayOfItems);
+    
+    return pRet;
 }
 
 CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems)
@@ -108,9 +91,21 @@ CCMenu* CCMenu::createWithArray(CCArray* pArrayOfItems)
     return pRet;
 }
 
-CCMenu* CCMenu::menuWithItem(CCMenuItem* item)
+CCMenu* CCMenu::createWithItems(CCMenuItem* item, va_list args)
 {
-    return CCMenu::createWithItem(item);
+    CCArray* pArray = NULL;
+    if( item )
+    {
+        pArray = CCArray::create(item, NULL);
+        CCMenuItem *i = va_arg(args, CCMenuItem*);
+        while(i)
+        {
+            pArray->addObject(i);
+            i = va_arg(args, CCMenuItem*);
+        }
+    }
+    
+    return CCMenu::createWithArray(pArray);
 }
 
 CCMenu* CCMenu::createWithItem(CCMenuItem* item)
@@ -123,27 +118,12 @@ bool CCMenu::init()
     return initWithArray(NULL);
 }
 
-bool CCMenu::initWithItems(CCMenuItem* item, va_list args)
-{
-    CCArray* pArray = NULL;
-    if( item ) 
-    {
-        pArray = CCArray::create(item, NULL);
-        CCMenuItem *i = va_arg(args, CCMenuItem*);
-        while(i) 
-        {
-            pArray->addObject(i);
-            i = va_arg(args, CCMenuItem*);
-        }
-    }
-
-    return initWithArray(pArray);
-}
-
 bool CCMenu::initWithArray(CCArray* pArrayOfItems)
 {
     if (CCLayer::init())
     {
+        setTouchPriority(kCCMenuHandlerPriority);
+        setTouchMode(kCCTouchesOneByOne);
         setTouchEnabled(true);
 
         m_bEnabled = true;
@@ -171,6 +151,11 @@ bool CCMenu::initWithArray(CCArray* pArrayOfItems)
         //    [self alignItemsVertically];
         m_pSelectedItem = NULL;
         m_eState = kCCMenuStateWaiting;
+        
+        // enable cascade color and opacity on menus
+        setCascadeColorEnabled(true);
+        setCascadeOpacityEnabled(true);
+        
         return true;
     }
     return false;
@@ -199,12 +184,29 @@ void CCMenu::onExit()
 {
     if (m_eState == kCCMenuStateTrackingTouch)
     {
-        m_pSelectedItem->unselected();
+        if (m_pSelectedItem)
+        {
+            m_pSelectedItem->unselected();
+            m_pSelectedItem = NULL;
+        }
+        
         m_eState = kCCMenuStateWaiting;
-        m_pSelectedItem = NULL;
     }
 
     CCLayer::onExit();
+}
+
+void CCMenu::removeChild(CCNode* child, bool cleanup)
+{
+    CCMenuItem *pMenuItem = dynamic_cast<CCMenuItem*>(child);
+    CCAssert(pMenuItem != NULL, "Menu only supports MenuItem objects as children");
+    
+    if (m_pSelectedItem == pMenuItem)
+    {
+        m_pSelectedItem = NULL;
+    }
+    
+    CCNode::removeChild(child, cleanup);
 }
 
 //Menu - Events
@@ -218,13 +220,13 @@ void CCMenu::setHandlerPriority(int newPriority)
 void CCMenu::registerWithTouchDispatcher()
 {
     CCDirector* pDirector = CCDirector::sharedDirector();
-    pDirector->getTouchDispatcher()->addTargetedDelegate(this, kCCMenuHandlerPriority, true);
+    pDirector->getTouchDispatcher()->addTargetedDelegate(this, this->getTouchPriority(), true);
 }
 
 bool CCMenu::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
     CC_UNUSED_PARAM(event);
-    if (m_eState != kCCMenuStateWaiting || ! m_bIsVisible || !m_bEnabled)
+    if (m_eState != kCCMenuStateWaiting || ! m_bVisible || !m_bEnabled)
     {
         return false;
     }
@@ -379,12 +381,18 @@ void CCMenu::alignItemsInColumns(unsigned int columns, ...)
 
 void CCMenu::alignItemsInColumns(unsigned int columns, va_list args)
 {
-    vector<unsigned int> rows;
+    CCArray* rows = CCArray::create();
     while (columns)
     {
-        rows.push_back(columns);
+        rows->addObject(CCInteger::create(columns));
         columns = va_arg(args, unsigned int);
     }
+    alignItemsInColumnsWithArray(rows);
+}
+
+void CCMenu::alignItemsInColumnsWithArray(CCArray* rowsArray)
+{
+    vector<unsigned int> rows = ccarray_to_std_vector(rowsArray);
 
     int height = -5;
     unsigned int row = 0;
@@ -484,12 +492,18 @@ void CCMenu::alignItemsInRows(unsigned int rows, ...)
 
 void CCMenu::alignItemsInRows(unsigned int rows, va_list args)
 {
-    vector<unsigned int> columns;
+    CCArray* pArray = CCArray::create();
     while (rows)
     {
-        columns.push_back(rows);
+        pArray->addObject(CCInteger::create(rows));
         rows = va_arg(args, unsigned int);
     }
+    alignItemsInRowsWithArray(pArray);
+}
+
+void CCMenu::alignItemsInRowsWithArray(CCArray* columnArray)
+{
+    vector<unsigned int> columns = ccarray_to_std_vector(columnArray);
 
     vector<unsigned int> columnWidths;
     vector<unsigned int> columnHeights;
@@ -586,63 +600,6 @@ void CCMenu::alignItemsInRows(unsigned int rows, va_list args)
     }
 }
 
-// Opacity Protocol
-
-/** Override synthesized setOpacity to recurse items */
-void CCMenu::setOpacity(GLubyte var)
-{
-    m_cOpacity = var;
-
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                CCRGBAProtocol *pRGBAProtocol = dynamic_cast<CCRGBAProtocol*>(pChild);
-                if (pRGBAProtocol)
-                {
-                    pRGBAProtocol->setOpacity(m_cOpacity);
-                }
-            }
-        }
-    }
-}
-
-GLubyte CCMenu::getOpacity(void)
-{
-    return m_cOpacity;
-}
-
-void CCMenu::setColor(const ccColor3B& var)
-{
-    m_tColor = var;
-
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        CCObject* pObject = NULL;
-        CCARRAY_FOREACH(m_pChildren, pObject)
-        {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild)
-            {
-                CCRGBAProtocol *pRGBAProtocol = dynamic_cast<CCRGBAProtocol*>(pChild);
-                if (pRGBAProtocol)
-                {
-                    pRGBAProtocol->setColor(m_tColor);
-                }
-            }
-        }
-    }
-}
-
-const ccColor3B& CCMenu::getColor(void)
-{
-    return m_tColor;
-}
-
 CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)
 {
     CCPoint touchLocation = touch->getLocation();
@@ -652,16 +609,16 @@ CCMenuItem* CCMenu::itemForTouch(CCTouch *touch)
         CCObject* pObject = NULL;
         CCARRAY_FOREACH(m_pChildren, pObject)
         {
-            CCNode* pChild = dynamic_cast<CCNode*>(pObject);
-            if (pChild && pChild->isVisible() && ((CCMenuItem*)pChild)->isEnabled())
+            CCMenuItem* pChild = dynamic_cast<CCMenuItem*>(pObject);
+            if (pChild && pChild->isVisible() && pChild->isEnabled())
             {
                 CCPoint local = pChild->convertToNodeSpace(touchLocation);
-                CCRect r = ((CCMenuItem*)pChild)->rect();
+                CCRect r = pChild->rect();
                 r.origin = CCPointZero;
 
                 if (r.containsPoint(local))
                 {
-                    return (CCMenuItem*)pChild;
+                    return pChild;
                 }
             }
         }

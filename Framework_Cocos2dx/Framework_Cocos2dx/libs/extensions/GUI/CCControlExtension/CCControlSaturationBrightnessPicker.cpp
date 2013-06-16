@@ -79,11 +79,6 @@ bool CCControlSaturationBrightnessPicker::initWithTargetAndPos(CCNode* target, C
     }
 }
 
-CCControlSaturationBrightnessPicker* CCControlSaturationBrightnessPicker::pickerWithTargetAndPos(CCNode* target, CCPoint pos)
-{
-    return CCControlSaturationBrightnessPicker::create(target, pos);
-}
-
 CCControlSaturationBrightnessPicker* CCControlSaturationBrightnessPicker::create(CCNode* target, CCPoint pos)
 {
     CCControlSaturationBrightnessPicker *pRet = new CCControlSaturationBrightnessPicker();
@@ -189,7 +184,7 @@ bool CCControlSaturationBrightnessPicker::checkSliderPosition(CCPoint location)
 
 bool CCControlSaturationBrightnessPicker::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
-    if (!isEnabled())
+    if (!isEnabled() || !isVisible())
     {
         return false;
     }

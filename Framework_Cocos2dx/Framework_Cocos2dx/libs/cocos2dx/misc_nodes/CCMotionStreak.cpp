@@ -36,9 +36,9 @@ NS_CC_BEGIN
 
 CCMotionStreak::CCMotionStreak()
 : m_bFastMode(false)
+, m_bStartingPositionInitialized(false)
 , m_pTexture(NULL)
 , m_tPositionR(CCPointZero)
-, m_tColor(ccc3(0,0,0))
 , m_fStroke(0.0f)
 , m_fFadeDelta(0.0f)
 , m_fMinSeg(0.0f)
@@ -50,7 +50,6 @@ CCMotionStreak::CCMotionStreak()
 , m_pVertices(NULL)
 , m_pColorPointer(NULL)
 , m_pTexCoords(NULL)
-, m_bStartingPositionInitialized(false)
 {
     m_tBlendFunc.src = GL_SRC_ALPHA;
     m_tBlendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
@@ -66,11 +65,6 @@ CCMotionStreak::~CCMotionStreak()
     CC_SAFE_FREE(m_pTexCoords);
 }
 
-CCMotionStreak* CCMotionStreak::streakWithFade(float fade, float minSeg, float stroke, ccColor3B color, const char* path)
-{
-    return CCMotionStreak::create(fade, minSeg, stroke, color, path);
-}
-
 CCMotionStreak* CCMotionStreak::create(float fade, float minSeg, float stroke, ccColor3B color, const char* path)
 {
     CCMotionStreak *pRet = new CCMotionStreak();
@@ -82,11 +76,6 @@ CCMotionStreak* CCMotionStreak::create(float fade, float minSeg, float stroke, c
 
     CC_SAFE_DELETE(pRet);
     return NULL;
-}
-
-CCMotionStreak* CCMotionStreak::streakWithFade(float fade, float minSeg, float stroke, ccColor3B color, CCTexture2D* texture)
-{
-    return CCMotionStreak::create(fade, minSeg, stroke, color, texture);
 }
 
 CCMotionStreak* CCMotionStreak::create(float fade, float minSeg, float stroke, ccColor3B color, CCTexture2D* texture)
@@ -190,16 +179,6 @@ ccBlendFunc CCMotionStreak::getBlendFunc(void)
     return m_tBlendFunc;
 }
 
-void CCMotionStreak::setColor(const ccColor3B& color)
-{
-    m_tColor = color;
-}
-
-const ccColor3B& CCMotionStreak::getColor(void)
-{
-    return m_tColor;
-}
-
 void CCMotionStreak::setOpacity(GLubyte opacity)
 {
     CCAssert(false, "Set opacity no supported");
@@ -301,8 +280,8 @@ void CCMotionStreak::update(float delta)
 
         // Color assignment
         const unsigned int offset = m_uNuPoints*8;
-        *((ccColor3B*)(m_pColorPointer + offset)) = m_tColor;
-        *((ccColor3B*)(m_pColorPointer + offset+4)) = m_tColor;
+        *((ccColor3B*)(m_pColorPointer + offset)) = _displayedColor;
+        *((ccColor3B*)(m_pColorPointer + offset+4)) = _displayedColor;
 
         // Opacity
         m_pColorPointer[offset+3] = 255;

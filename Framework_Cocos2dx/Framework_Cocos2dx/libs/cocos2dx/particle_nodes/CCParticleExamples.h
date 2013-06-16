@@ -43,22 +43,9 @@ public:
     virtual ~CCParticleFire(){}
     bool init(){ return initWithTotalParticles(250); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleFire * node()
-    {
-        return create();
-    }
-
-    static CCParticleFire * create()
-    {
-        CCParticleFire *pRet = new CCParticleFire();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleFire* create();
+    static CCParticleFire* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief A fireworks particle system
@@ -69,22 +56,9 @@ public:
     virtual ~CCParticleFireworks(){}
     bool init(){ return initWithTotalParticles(1500); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleFireworks * node()
-    {
-        return create();
-    }
-
-    static CCParticleFireworks * create()
-    {
-        CCParticleFireworks *pRet = new CCParticleFireworks();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleFireworks* create();
+    static CCParticleFireworks* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief A sun particle system
@@ -95,21 +69,9 @@ public:
     virtual ~CCParticleSun(){}
     bool init(){ return initWithTotalParticles(350); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleSun * node()
-    {
-        return create();
-    }
-    static CCParticleSun * create()
-    {
-        CCParticleSun *pRet = new CCParticleSun();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleSun* create();
+    static CCParticleSun* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief A galaxy particle system
@@ -120,22 +82,9 @@ public:
     virtual ~CCParticleGalaxy(){}
     bool init(){ return initWithTotalParticles(200); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleGalaxy * node()
-    {
-        return create();
-    }
-
-    static CCParticleGalaxy * create()
-    {
-        CCParticleGalaxy *pRet = new CCParticleGalaxy();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleGalaxy* create();
+    static CCParticleGalaxy* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief A flower particle system
@@ -146,22 +95,9 @@ public:
     virtual ~CCParticleFlower(){}
     bool init(){ return initWithTotalParticles(250); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleFlower * node()
-    {
-        return create();
-    }
-
-    static CCParticleFlower * create()
-    {
-        CCParticleFlower *pRet = new CCParticleFlower();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleFlower* create();
+    static CCParticleFlower* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief A meteor particle system
@@ -172,21 +108,9 @@ public:
     virtual ~CCParticleMeteor(){}
     bool init(){ return initWithTotalParticles(150); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleMeteor * node()
-    {
-        return create();
-    }
-    static CCParticleMeteor * create()
-    {
-        CCParticleMeteor *pRet = new CCParticleMeteor();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+
+    static CCParticleMeteor * create();
+    static CCParticleMeteor* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief An spiral particle system
@@ -197,21 +121,9 @@ public:
     virtual ~CCParticleSpiral(){}
     bool init(){ return initWithTotalParticles(500); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleSpiral * node()
-    {
-        return create();
-    }
-    static CCParticleSpiral * create()
-    {
-        CCParticleSpiral *pRet = new CCParticleSpiral();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleSpiral* create();
+    static CCParticleSpiral* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief An explosion particle system
@@ -222,21 +134,9 @@ public:
     virtual ~CCParticleExplosion(){}
     bool init(){ return initWithTotalParticles(700); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleExplosion * node()
-    {
-        return create();
-    }
-    static CCParticleExplosion * create()
-    {
-        CCParticleExplosion *pRet = new CCParticleExplosion();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleExplosion* create();
+    static CCParticleExplosion* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief An smoke particle system
@@ -247,21 +147,9 @@ public:
     virtual ~CCParticleSmoke(){}
     bool init(){ return initWithTotalParticles(200); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleSmoke * node()
-    {
-        return create();
-    }
-    static CCParticleSmoke * create()
-    {
-        CCParticleSmoke *pRet = new CCParticleSmoke();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleSmoke* create();
+    static CCParticleSmoke* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief An snow particle system
@@ -272,22 +160,9 @@ public:
     virtual ~CCParticleSnow(){}
     bool init(){ return initWithTotalParticles(700); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleSnow * node()
-    {
-        return create();
-    }
-
-    static CCParticleSnow * create()
-    {
-        CCParticleSnow *pRet = new CCParticleSnow();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleSnow* create();
+    static CCParticleSnow* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 //! @brief A rain particle system
@@ -298,21 +173,9 @@ public:
     virtual ~CCParticleRain(){}
     bool init(){ return initWithTotalParticles(1000); }
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleRain * node()
-    {
-        return create();
-    }
-    static CCParticleRain * create()
-    {
-        CCParticleRain *pRet = new CCParticleRain();
-        if (pRet->init())
-        {
-            pRet->autorelease();
-            return pRet;
-        }
-        CC_SAFE_DELETE(pRet);
-        return NULL;
-    }
+    
+    static CCParticleRain* create();
+    static CCParticleRain* createWithTotalParticles(unsigned int numberOfParticles);
 };
 
 // end of particle_nodes group

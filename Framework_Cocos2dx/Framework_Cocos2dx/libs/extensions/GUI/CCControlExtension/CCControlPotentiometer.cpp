@@ -31,11 +31,11 @@
 NS_CC_EXT_BEGIN
 
 CCControlPotentiometer::CCControlPotentiometer()
-: m_fValue(0.0f)
+: m_pThumbSprite(NULL)
+, m_pProgressTimer(NULL)
+, m_fValue(0.0f)
 , m_fMinimumValue(0.0f)
 , m_fMaximumValue(0.0f)
-, m_pThumbSprite(NULL)
-, m_pProgressTimer(NULL)
 {
 
 }
@@ -179,8 +179,7 @@ bool CCControlPotentiometer::isTouchInside(CCTouch * touch)
 
 bool CCControlPotentiometer::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
-    if (!this->isTouchInside(pTouch)
-        || !this->isEnabled())
+    if (!this->isTouchInside(pTouch) || !this->isEnabled() || !isVisible())
     {
         return false;
     }

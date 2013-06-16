@@ -28,13 +28,12 @@ THE SOFTWARE.
 #define __COCOS2D_H__
 
 // 0x00 HI ME LO
-// 00   02 00 00
-#define COCOS2D_VERSION 0x00020003
+// 00   02 01 00
+#define COCOS2D_VERSION 0x00020100
 
 //
 // all cocos2d include files
 //
-
 #include "ccConfig.h"
 
 // actions
@@ -65,9 +64,16 @@ THE SOFTWARE.
 #include "cocoa/CCSet.h"
 #include "cocoa/CCAutoreleasePool.h"
 #include "cocoa/CCInteger.h"
+#include "cocoa/CCFloat.h"
+#include "cocoa/CCDouble.h"
+#include "cocoa/CCBool.h"
 #include "cocoa/CCString.h"
 #include "cocoa/CCNS.h"
 #include "cocoa/CCZone.h"
+
+// draw nodes
+#include "draw_nodes/CCDrawingPrimitives.h"
+#include "draw_nodes/CCDrawNode.h"
 
 // effects
 #include "effects/CCGrabber.h"
@@ -105,6 +111,7 @@ THE SOFTWARE.
 #include "menu_nodes/CCMenuItem.h"
 
 // misc_nodes
+#include "misc_nodes/CCClippingNode.h"
 #include "misc_nodes/CCMotionStreak.h"
 #include "misc_nodes/CCProgressTimer.h"
 #include "misc_nodes/CCRenderTexture.h"
@@ -116,7 +123,7 @@ THE SOFTWARE.
 #include "particle_nodes/CCParticleSystemQuad.h"
 
 // platform
-
+#include "platform/CCDevice.h"
 #include "platform/CCCommon.h"
 #include "platform/CCFileUtils.h"
 #include "platform/CCImage.h"
@@ -174,6 +181,23 @@ THE SOFTWARE.
 	#include "platform/linux/CCStdC.h"
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 
+// MARMALADE CHANGE
+// Added for Marmalade support
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MARMALADE)
+	#include "platform/Marmalade/CCAccelerometer.h"
+	#include "platform/Marmalade/CCApplication.h"
+	#include "platform/Marmalade/CCEGLView.h"
+	#include "platform/Marmalade/CCGL.h"
+	#include "platform/Marmalade/CCStdC.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_NACL)
+    #include "platform/nacl/CCAccelerometer.h"
+    #include "platform/nacl/CCApplication.h"
+    #include "platform/nacl/CCEGLView.h"
+    #include "platform/nacl/CCGL.h"
+    #include "platform/nacl/CCStdC.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
 // script_support
 #include "script_support/CCScriptSupport.h"
@@ -193,11 +217,13 @@ THE SOFTWARE.
 #include "sprite_nodes/CCSpriteFrameCache.h"
 
 // support
+#include "support/ccUTF8.h"
 #include "support/CCNotificationCenter.h"
 #include "support/CCPointExtension.h"
 #include "support/CCProfiling.h"
-#include "support/CCUserDefault.h"
+#include "support/user_default/CCUserDefault.h"
 #include "support/CCVertex.h"
+#include "support/tinyxml2/tinyxml2.h"
 
 // text_input_node
 #include "text_input_node/CCIMEDelegate.h"
@@ -228,12 +254,11 @@ THE SOFTWARE.
 #include "CCCamera.h"
 #include "CCConfiguration.h"
 #include "CCDirector.h"
-#include "CCDrawingPrimitives.h"
 #include "CCScheduler.h"
 
 NS_CC_BEGIN
 
-const char* cocos2dVersion();
+CC_DLL const char* cocos2dVersion();
 
 NS_CC_END
 

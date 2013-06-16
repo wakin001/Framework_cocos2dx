@@ -1091,8 +1091,9 @@ local int unz64local_GetCurrentFileInfoInternal (unzFile file,
 
         if (lSeek!=0)
         {
-            if (ZSEEK64(s->z_filefunc, s->filestream,lSeek,ZLIB_FILEFUNC_SEEK_CUR)==0)
-              ;//lSeek=0;
+            if (ZSEEK64(s->z_filefunc, s->filestream,lSeek,ZLIB_FILEFUNC_SEEK_CUR)==0) {
+              //lSeek=0;
+			}
             else
                 err=UNZ_ERRNO;
         }
@@ -1172,11 +1173,16 @@ int ZEXPORT unzGetCurrentFileInfo (unzFile file,
     }
     return err;
 }
+
 /*
-  Set the current file of the zipfile to the first file.
+  Set the current file of the zipfile to the first file
+  with retrieving an information about the file.
   return UNZ_OK if there is no problem
 */
-int ZEXPORT unzGoToFirstFile (unzFile file)
+int ZEXPORT unzGoToFirstFile64 (unzFile file,
+                        unz_file_info64 *pfile_info,
+                        char *szFileName,
+                        uLong fileNameBufferSize)
 {
     int err=UNZ_OK;
     unz64_s* s;
@@ -1187,17 +1193,32 @@ int ZEXPORT unzGoToFirstFile (unzFile file)
     s->num_file=0;
     err=unz64local_GetCurrentFileInfoInternal(file,&s->cur_file_info,
                                              &s->cur_file_info_internal,
-                                             NULL,0,NULL,0,NULL,0);
+                                             szFileName,fileNameBufferSize,NULL,0,NULL,0);
     s->current_file_ok = (err == UNZ_OK);
+    if (pfile_info)
+        *pfile_info = s->cur_file_info;
     return err;
 }
 
 /*
-  Set the current file of the zipfile to the next file.
+  Set the current file of the zipfile to the first file.
+  return UNZ_OK if there is no problem
+*/
+int ZEXPORT unzGoToFirstFile (unzFile file)
+{
+    return unzGoToFirstFile64(file, NULL, NULL, 0);
+}
+
+/*
+  Set the current file of the zipfile to the next file
+  with retrieving an information about the file.
   return UNZ_OK if there is no problem
   return UNZ_END_OF_LIST_OF_FILE if the actual file was the latest.
 */
-int ZEXPORT unzGoToNextFile (unzFile  file)
+int ZEXPORT unzGoToNextFile64 (unzFile file,
+                       unz_file_info64 *pfile_info,
+                       char *szFileName,
+                       uLong fileNameBufferSize)
 {
     unz64_s* s;
     int err;
@@ -1216,9 +1237,21 @@ int ZEXPORT unzGoToNextFile (unzFile  file)
     s->num_file++;
     err = unz64local_GetCurrentFileInfoInternal(file,&s->cur_file_info,
                                                &s->cur_file_info_internal,
-                                               NULL,0,NULL,0,NULL,0);
+                                               szFileName,fileNameBufferSize,NULL,0,NULL,0);
     s->current_file_ok = (err == UNZ_OK);
+    if (pfile_info)
+        *pfile_info = s->cur_file_info;
     return err;
+}
+
+/*
+  Set the current file of the zipfile to the next file.
+  return UNZ_OK if there is no problem
+  return UNZ_END_OF_LIST_OF_FILE if the actual file was the latest.
+*/
+int ZEXPORT unzGoToNextFile (unzFile  file)
+{
+    return unzGoToNextFile64(file, NULL, NULL, 0);
 }
 
 
@@ -1534,10 +1567,10 @@ int ZEXPORT unzOpenCurrentFile3 (unzFile file, int* method,
 /* #ifdef HAVE_BZIP2 */
         (s->cur_file_info.compression_method!=Z_BZIP2ED) &&
 /* #endif */
-        (s->cur_file_info.compression_method!=Z_DEFLATED))
+        (s->cur_file_info.compression_method!=Z_DEFLATED)) {
 
         //err=UNZ_BADZIPFILE;
-
+    }
     pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
     pfile_in_zip_read_info->crc32=0;
     pfile_in_zip_read_info->total_out_64=0;

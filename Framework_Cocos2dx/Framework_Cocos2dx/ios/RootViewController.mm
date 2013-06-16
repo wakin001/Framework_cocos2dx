@@ -1,8 +1,8 @@
 //
-//  Framework_Cocos2dxAppController.h
-//  Framework_Cocos2dx
+//  Framework_cocos2dxAppController.h
+//  Framework_cocos2dx
 //
-//  Created by wang feng on 13/06/02.
+//  Created by ou-h on 13/06/07.
 //  Copyright __MyCompanyName__ 2013年. All rights reserved.
 //
 
@@ -43,7 +43,7 @@
 // For ios6, use supportedInterfaceOrientations & shouldAutorotate instead
 - (NSUInteger) supportedInterfaceOrientations{
 #ifdef __IPHONE_6_0
-    return UIInterfaceOrientationMaskAllButUpsideDown;
+    return UIInterfaceOrientationMaskLandscape;
 #endif
 }
 

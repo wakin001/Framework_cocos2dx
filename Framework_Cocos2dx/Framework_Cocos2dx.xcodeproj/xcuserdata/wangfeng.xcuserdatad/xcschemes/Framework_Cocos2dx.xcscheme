@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0AF422A6175B811800737BD5"
-               BuildableName = "Framework_Cocos2dx.app"
-               BlueprintName = "Framework_Cocos2dx"
-               ReferencedContainer = "container:Framework_Cocos2dx.xcodeproj">
+               BlueprintIdentifier = "73F9168217619165004BDFEB"
+               BuildableName = "Framework_cocos2dx.app"
+               BlueprintName = "Framework_cocos2dx"
+               ReferencedContainer = "container:Framework_cocos2dx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0AF422A6175B811800737BD5"
-            BuildableName = "Framework_Cocos2dx.app"
-            BlueprintName = "Framework_Cocos2dx"
-            ReferencedContainer = "container:Framework_Cocos2dx.xcodeproj">
+            BlueprintIdentifier = "73F9168217619165004BDFEB"
+            BuildableName = "Framework_cocos2dx.app"
+            BlueprintName = "Framework_cocos2dx"
+            ReferencedContainer = "container:Framework_cocos2dx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0AF422A6175B811800737BD5"
-            BuildableName = "Framework_Cocos2dx.app"
-            BlueprintName = "Framework_Cocos2dx"
-            ReferencedContainer = "container:Framework_Cocos2dx.xcodeproj">
+            BlueprintIdentifier = "73F9168217619165004BDFEB"
+            BuildableName = "Framework_cocos2dx.app"
+            BlueprintName = "Framework_cocos2dx"
+            ReferencedContainer = "container:Framework_cocos2dx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0AF422A6175B811800737BD5"
-            BuildableName = "Framework_Cocos2dx.app"
-            BlueprintName = "Framework_Cocos2dx"
-            ReferencedContainer = "container:Framework_Cocos2dx.xcodeproj">
+            BlueprintIdentifier = "73F9168217619165004BDFEB"
+            BuildableName = "Framework_cocos2dx.app"
+            BlueprintName = "Framework_cocos2dx"
+            ReferencedContainer = "container:Framework_cocos2dx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

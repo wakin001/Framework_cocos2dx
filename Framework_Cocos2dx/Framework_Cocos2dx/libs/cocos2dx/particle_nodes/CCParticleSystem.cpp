@@ -57,6 +57,10 @@ THE SOFTWARE.
 // opengl
 #include "CCGL.h"
 
+#include <string>
+
+using namespace std;
+
 
 NS_CC_BEGIN
 
@@ -78,40 +82,40 @@ NS_CC_BEGIN
 //
 
 CCParticleSystem::CCParticleSystem()
-    :m_sPlistFile("")
-    ,m_fElapsed(0)
-    ,m_pParticles(NULL)
-    ,m_fEmitCounter(0)
-    ,m_uParticleIdx(0)
-    ,m_bIsActive(true)
-    ,m_uParticleCount(0)
-    ,m_fDuration(0)
-    ,m_tSourcePosition(CCPointZero)
-    ,m_tPosVar(CCPointZero)
-    ,m_fLife(0)
-    ,m_fLifeVar(0)
-    ,m_fAngle(0)
-    ,m_fAngleVar(0)
-    ,m_fStartSize(0)
-    ,m_fStartSizeVar(0)
-    ,m_fEndSize(0)
-    ,m_fEndSizeVar(0)
-    ,m_fStartSpin(0)
-    ,m_fStartSpinVar(0)
-    ,m_fEndSpin(0)
-    ,m_fEndSpinVar(0)
-    ,m_fEmissionRate(0)
-    ,m_uTotalParticles(0)
-    ,m_pTexture(NULL)
-    ,m_bOpacityModifyRGB(false)
-    ,m_bIsBlendAdditive(false)
-    ,m_ePositionType(kCCPositionTypeFree)
-    ,m_bIsAutoRemoveOnFinish(false)
-    ,m_nEmitterMode(kCCParticleModeGravity)
-    ,m_pBatchNode(NULL)
-    ,m_uAtlasIndex(0)
-    ,m_bTransformSystemDirty(false)
-    ,m_uAllocatedParticles(0)
+: m_sPlistFile("")
+, m_fElapsed(0)
+, m_pParticles(NULL)
+, m_fEmitCounter(0)
+, m_uParticleIdx(0)
+, m_pBatchNode(NULL)
+, m_uAtlasIndex(0)
+, m_bTransformSystemDirty(false)
+, m_uAllocatedParticles(0)
+, m_bIsActive(true)
+, m_uParticleCount(0)
+, m_fDuration(0)
+, m_tSourcePosition(CCPointZero)
+, m_tPosVar(CCPointZero)
+, m_fLife(0)
+, m_fLifeVar(0)
+, m_fAngle(0)
+, m_fAngleVar(0)
+, m_fStartSize(0)
+, m_fStartSizeVar(0)
+, m_fEndSize(0)
+, m_fEndSizeVar(0)
+, m_fStartSpin(0)
+, m_fStartSpinVar(0)
+, m_fEndSpin(0)
+, m_fEndSpinVar(0)
+, m_fEmissionRate(0)
+, m_uTotalParticles(0)
+, m_pTexture(NULL)
+, m_bOpacityModifyRGB(false)
+, m_bIsBlendAdditive(false)
+, m_ePositionType(kCCPositionTypeFree)
+, m_bIsAutoRemoveOnFinish(false)
+, m_nEmitterMode(kCCParticleModeGravity)
 {
     modeA.gravity = CCPointZero;
     modeA.speed = 0;
@@ -120,6 +124,7 @@ CCParticleSystem::CCParticleSystem()
     modeA.tangentialAccelVar = 0;
     modeA.radialAccel = 0;
     modeA.radialAccelVar = 0;
+    modeA.rotationIsDir = false;
     modeB.startRadius = 0;
     modeB.startRadiusVar = 0;
     modeB.endRadius = 0;
@@ -130,10 +135,6 @@ CCParticleSystem::CCParticleSystem()
     m_tBlendFunc.dst = CC_BLEND_DST;
 }
 // implementation CCParticleSystem
-CCParticleSystem * CCParticleSystem::particleWithFile(const char *plistFile)
-{
-    return CCParticleSystem::create(plistFile);
-}
 
 CCParticleSystem * CCParticleSystem::create(const char *plistFile)
 {
@@ -167,17 +168,34 @@ bool CCParticleSystem::init()
 bool CCParticleSystem::initWithFile(const char *plistFile)
 {
     bool bRet = false;
-    m_sPlistFile = CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(plistFile);
+    m_sPlistFile = CCFileUtils::sharedFileUtils()->fullPathForFilename(plistFile);
     CCDictionary *dict = CCDictionary::createWithContentsOfFileThreadSafe(m_sPlistFile.c_str());
 
     CCAssert( dict != NULL, "Particles: file not found");
-    bRet = this->initWithDictionary(dict);
+    
+    // XXX compute path from a path, should define a function somewhere to do it
+    string listFilePath = plistFile;
+    if (listFilePath.find('/') != string::npos)
+    {
+        listFilePath = listFilePath.substr(0, listFilePath.rfind('/') + 1);
+        bRet = this->initWithDictionary(dict, listFilePath.c_str());
+    }
+    else
+    {
+        bRet = this->initWithDictionary(dict, "");
+    }
+    
     dict->release();
 
     return bRet;
 }
 
 bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary)
+{
+    return initWithDictionary(dictionary, "");
+}
+
+bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary, const char *dirname)
 {
     bool bRet = false;
     unsigned char *buffer = NULL;
@@ -260,6 +278,9 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary)
                 // tangential acceleration
                 modeA.tangentialAccel = dictionary->valueForKey("tangentialAcceleration")->floatValue();
                 modeA.tangentialAccelVar = dictionary->valueForKey("tangentialAccelVariance")->floatValue();
+                
+                // rotation is dir
+                modeA.rotationIsDir = dictionary->valueForKey("rotationIsDir")->boolValue();
             }
 
             // or Mode B: radius movement
@@ -292,18 +313,36 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary)
 
                 // texture        
                 // Try to get the texture from the cache
-                const char* textureName = dictionary->valueForKey("textureFileName")->getCString();
-                std::string fullpath = CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile(textureName, m_sPlistFile.c_str());
+                std::string textureName = dictionary->valueForKey("textureFileName")->getCString();
+                
+                size_t rPos = textureName.rfind('/');
+               
+                if (rPos != string::npos)
+                {
+                    string textureDir = textureName.substr(0, rPos + 1);
+                    
+                    if (dirname != NULL && textureDir != dirname)
+                    {
+                        textureName = textureName.substr(rPos+1);
+                        textureName = string(dirname) + textureName;
+                    }
+                }
+                else
+                {
+                    if (dirname != NULL)
+                    {
+                        textureName = string(dirname) + textureName;
+                    }
+                }
                 
                 CCTexture2D *tex = NULL;
                 
-                if (strlen(textureName) > 0)
+                if (textureName.length() > 0)
                 {
                     // set not pop-up message box when load image failed
                     bool bNotify = CCFileUtils::sharedFileUtils()->isPopupNotify();
                     CCFileUtils::sharedFileUtils()->setPopupNotify(false);
-                    tex = CCTextureCache::sharedTextureCache()->addImage(fullpath.c_str());
-                    
+                    tex = CCTextureCache::sharedTextureCache()->addImage(textureName.c_str());
                     // reset the value of UIImage notify
                     CCFileUtils::sharedFileUtils()->setPopupNotify(bNotify);
                 }
@@ -335,7 +374,7 @@ bool CCParticleSystem::initWithDictionary(CCDictionary *dictionary)
                         CCAssert(isOK, "CCParticleSystem: error init image with Data");
                         CC_BREAK_IF(!isOK);
                         
-                        setTexture(CCTextureCache::sharedTextureCache()->addUIImage(image, fullpath.c_str()));
+                        setTexture(CCTextureCache::sharedTextureCache()->addUIImage(image, textureName.c_str()));
 
                         image->release();
                     }
@@ -405,7 +444,9 @@ bool CCParticleSystem::initWithTotalParticles(unsigned int numberOfParticles)
 
 CCParticleSystem::~CCParticleSystem()
 {
-    unscheduleUpdate();
+    // Since the scheduler retains the "target (in this case the ParticleSystem)
+	// it is not needed to call "unscheduleUpdate" here. In fact, it will be called in "cleanup"
+    //unscheduleUpdate();
     CC_SAFE_FREE(m_pParticles);
     CC_SAFE_RELEASE(m_pTexture);
 }
@@ -486,7 +527,7 @@ void CCParticleSystem::initParticle(tCCParticle* particle)
     }
     else if ( m_ePositionType == kCCPositionTypeRelative )
     {
-        particle->startPos = m_tPosition;
+        particle->startPos = m_obPosition;
     }
 
     // direction
@@ -508,6 +549,9 @@ void CCParticleSystem::initParticle(tCCParticle* particle)
         // tangential accel
         particle->modeA.tangentialAccel = modeA.tangentialAccel + modeA.tangentialAccelVar * CCRANDOM_MINUS1_1();
 
+        // rotation is dir
+        if(modeA.rotationIsDir)
+            particle->rotation = -CC_RADIANS_TO_DEGREES(ccpToAngle(particle->modeA.dir));
     }
 
     // Mode Radius: B
@@ -591,10 +635,10 @@ void CCParticleSystem::update(float dt)
     }
     else if (m_ePositionType == kCCPositionTypeRelative)
     {
-        currentPosition = m_tPosition;
+        currentPosition = m_obPosition;
     }
 
-    if (m_bIsVisible)
+    if (m_bVisible)
     {
         while (m_uParticleIdx < m_uParticleCount)
         {
@@ -677,8 +721,8 @@ void CCParticleSystem::update(float dt)
                 // don't update the particle with the new position information, it will interfere with the radius and tangential calculations
                 if (m_pBatchNode)
                 {
-                    newPos.x+=m_tPosition.x;
-                    newPos.y+=m_tPosition.y;
+                    newPos.x+=m_obPosition.x;
+                    newPos.y+=m_obPosition.y;
                 }
 
                 updateQuadWithParticle(p, newPos);
@@ -859,6 +903,18 @@ float CCParticleSystem::getRadialAccelVar()
 {
     CCAssert( m_nEmitterMode == kCCParticleModeGravity, "Particle Mode should be Gravity");
     return modeA.radialAccelVar;
+}
+
+void CCParticleSystem::setRotationIsDir(bool t)
+{
+    CCAssert( m_nEmitterMode == kCCParticleModeGravity, "Particle Mode should be Gravity");
+    modeA.rotationIsDir = t;
+}
+
+bool CCParticleSystem::getRotationIsDir()
+{
+    CCAssert( m_nEmitterMode == kCCParticleModeGravity, "Particle Mode should be Gravity");
+    return modeA.rotationIsDir;
 }
 
 void CCParticleSystem::setGravity(const CCPoint& g)

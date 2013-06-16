@@ -61,14 +61,14 @@ static CCTexture2DPixelFormat g_defaultAlphaPixelFormat = kCCTexture2DPixelForma
 static bool PVRHaveAlphaPremultiplied_ = false;
 
 CCTexture2D::CCTexture2D()
-: m_uPixelsWide(0)
+: m_bPVRHaveAlphaPremultiplied(true)
+, m_uPixelsWide(0)
 , m_uPixelsHigh(0)
 , m_uName(0)
 , m_fMaxS(0.0)
 , m_fMaxT(0.0)
 , m_bHasPremultipliedAlpha(false)
 , m_bHasMipmaps(false)
-, m_bPVRHaveAlphaPremultiplied(true)
 , m_pShaderProgram(NULL)
 {
 }
@@ -253,7 +253,6 @@ bool CCTexture2D::initWithImage(CCImage *uiImage)
     if (uiImage == NULL)
     {
         CCLOG("cocos2d: CCTexture2D. Can't create Texture. UIImage is nil");
-        this->release();
         return false;
     }
     
@@ -266,8 +265,7 @@ bool CCTexture2D::initWithImage(CCImage *uiImage)
     if (imageWidth > maxTextureSize || imageHeight > maxTextureSize) 
     {
         CCLOG("cocos2d: WARNING: Image (%u x %u) is bigger than the supported %u x %u", imageWidth, imageHeight, maxTextureSize, maxTextureSize);
-        this->release();
-        return NULL;
+        return false;
     }
     
     // always load premultiplied images
@@ -416,18 +414,17 @@ bool CCTexture2D::initPremultipliedATextureWithImage(CCImage *image, unsigned in
 // implementation CCTexture2D (Text)
 bool CCTexture2D::initWithString(const char *text, const char *fontName, float fontSize)
 {
-    return initWithString(text, CCSizeMake(0,0), kCCTextAlignmentCenter, kCCVerticalTextAlignmentTop, fontName, fontSize);
+    return initWithString(text,  fontName, fontSize, CCSizeMake(0,0), kCCTextAlignmentCenter, kCCVerticalTextAlignmentTop);
 }
 
-bool CCTexture2D::initWithString(const char *text, const CCSize& dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment, const char *fontName, float fontSize)
+bool CCTexture2D::initWithString(const char *text, const char *fontName, float fontSize, const CCSize& dimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment)
 {
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     // cache the texture data
     VolatileTexture::addStringTexture(this, text, dimensions, hAlignment, vAlignment, fontName, fontSize);
 #endif
 
-    CCImage image;
-
+    bool bRet = false;
     CCImage::ETextAlign eAlign;
 
     if (kCCVerticalTextAlignmentTop == vAlignment)
@@ -448,14 +445,20 @@ bool CCTexture2D::initWithString(const char *text, const CCSize& dimensions, CCT
     else
     {
         CCAssert(false, "Not supported alignment format!");
-    }
-    
-    if (!image.initWithString(text, (int)dimensions.width, (int)dimensions.height, eAlign, fontName, (int)fontSize))
-    {
         return false;
     }
+    
+    CCImage* pImage = new CCImage();
+    do 
+    {
+        CC_BREAK_IF(NULL == pImage);
+        bRet = pImage->initWithString(text, (int)dimensions.width, (int)dimensions.height, eAlign, fontName, (int)fontSize);
+        CC_BREAK_IF(!bRet);
+        bRet = initWithImage(pImage);
+    } while (0);
+    CC_SAFE_RELEASE(pImage);
 
-    return initWithImage(&image);
+    return bRet;
 }
 
 
@@ -480,7 +483,7 @@ void CCTexture2D::drawAtPoint(const CCPoint& point)
 
     ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position | kCCVertexAttribFlag_TexCoords );
     m_pShaderProgram->use();
-    m_pShaderProgram->setUniformForModelViewProjectionMatrix();
+    m_pShaderProgram->setUniformsForBuiltins();
 
     ccGLBindTexture2D( m_uName );
 
@@ -506,7 +509,7 @@ void CCTexture2D::drawInRect(const CCRect& rect)
 
     ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position | kCCVertexAttribFlag_TexCoords );
     m_pShaderProgram->use();
-    m_pShaderProgram->setUniformForModelViewProjectionMatrix();
+    m_pShaderProgram->setUniformsForBuiltins();
 
     ccGLBindTexture2D( m_uName );
 
@@ -514,46 +517,6 @@ void CCTexture2D::drawInRect(const CCRect& rect)
     glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, 0, coordinates);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
-
-#ifdef CC_SUPPORT_PVRTC
-// implementation CCTexture2D (PVRTC);    
-bool CCTexture2D::initWithPVRTCData(const void *data, int level, int bpp, bool hasAlpha, int length, CCTexture2DPixelFormat pixelFormat)
-{
-    if( !(CCConfiguration::sharedConfiguration()->supportsPVRTC()) )
-    {
-        CCLOG("cocos2d: WARNING: PVRTC images is not supported.");
-        this->release();
-        return false;
-    }
-
-    glGenTextures(1, &m_uName);
-    glBindTexture(GL_TEXTURE_2D, m_uName);
-
-    this->setAntiAliasTexParameters();
-
-    GLenum format;
-    GLsizei size = length * length * bpp / 8;
-    if(hasAlpha) {
-        format = (bpp == 4) ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-    } else {
-        format = (bpp == 4) ? GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-    }
-    if(size < 32) {
-        size = 32;
-    }
-    glCompressedTexImage2D(GL_TEXTURE_2D, level, format, length, length, 0, size, data);
-
-    m_tContentSize = CCSizeMake((float)(length), (float)(length));
-    m_uPixelsWide = length;
-    m_uPixelsHigh = length;
-    m_fMaxS = 1.0f;
-    m_fMaxT = 1.0f;
-    m_bHasPremultipliedAlpha = PVRHaveAlphaPremultiplied_;
-    m_ePixelFormat = pixelFormat;
-
-    return true;
-}
-#endif // CC_SUPPORT_PVRTC
 
 bool CCTexture2D::initWithPVRFile(const char* file)
 {

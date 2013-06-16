@@ -41,5 +41,12 @@
 #include "network/HttpResponse.h"
 #include "network/HttpClient.h"
 
-#endif /* __COCOS2D_EXT_H__ */
+// Physics integration
+#if CC_ENABLE_CHIPMUNK_INTEGRATION || CC_ENABLE_BOX2D_INTEGRATION
+#include "physics_nodes/CCPhysicsDebugNode.h"
+#include "physics_nodes/CCPhysicsSprite.h"
+#endif
 
+#include "spine/spine-cocos2dx.h"
+
+#endif /* __COCOS2D_EXT_H__ */

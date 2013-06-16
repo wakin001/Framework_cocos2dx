@@ -39,17 +39,17 @@ NS_CC_EXT_BEGIN
 #define kAutorepeatIncreaseTimeIncrement    12
 
 CCControlStepper::CCControlStepper()
-: m_dValue(0.0)
+: m_pMinusSprite(NULL)
+, m_pPlusSprite(NULL)
+, m_pMinusLabel(NULL)
+, m_pPlusLabel(NULL)
+, m_dValue(0.0)
 , m_bContinuous(false)
 , m_bAutorepeat(false)
 , m_bWraps(false)
 , m_dMinimumValue(0.0)
 , m_dMaximumValue(0.0)
 , m_dStepValue(0.0)
-, m_pMinusSprite(NULL)
-, m_pPlusSprite(NULL)
-, m_pMinusLabel(NULL)
-, m_pPlusLabel(NULL)
 , m_bTouchInsideFlag(false)
 , m_eTouchedPart(kCCControlStepperPartNone)
 , m_nAutorepeatCount(0)
@@ -276,8 +276,7 @@ void CCControlStepper::updateLayoutUsingTouchLocation(CCPoint location)
 
 bool CCControlStepper::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
-    if (!this->isTouchInside(pTouch)
-        || !this->isEnabled())
+    if (!isTouchInside(pTouch) || !isEnabled() || !isVisible())
     {
         return false;
     }

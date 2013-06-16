@@ -25,8 +25,9 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "CCLabelAtlas.h"
 #include "textures/CCTextureAtlas.h"
+#include "textures/CCTextureCache.h"
 #include "support/CCPointExtension.h"
-#include "CCDrawingPrimitives.h"
+#include "draw_nodes/CCDrawingPrimitives.h"
 #include "ccConfig.h"
 #include "shaders/CCShaderCache.h"
 #include "shaders/CCGLProgram.h"
@@ -41,10 +42,6 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 //CCLabelAtlas - Creation & Init
-CCLabelAtlas* CCLabelAtlas::labelWithString(const char *string, const char *charMapFile, unsigned int itemWidth, int unsigned itemHeight, unsigned int startCharMap)
-{
-    return CCLabelAtlas::create(string, charMapFile, itemWidth, itemHeight, startCharMap);
-}
 
 CCLabelAtlas* CCLabelAtlas::create(const char *string, const char *charMapFile, unsigned int itemWidth, int unsigned itemHeight, unsigned int startCharMap)
 {
@@ -60,19 +57,20 @@ CCLabelAtlas* CCLabelAtlas::create(const char *string, const char *charMapFile, 
 
 bool CCLabelAtlas::initWithString(const char *string, const char *charMapFile, unsigned int itemWidth, unsigned int itemHeight, unsigned int startCharMap)
 {
+    CCTexture2D *texture = CCTextureCache::sharedTextureCache()->addImage(charMapFile);
+	return initWithString(string, texture, itemWidth, itemHeight, startCharMap);
+}
+
+bool CCLabelAtlas::initWithString(const char *string, CCTexture2D* texture, unsigned int itemWidth, unsigned int itemHeight, unsigned int startCharMap)
+{
     CCAssert(string != NULL, "");
-    if (CCAtlasNode::initWithTileFile(charMapFile, itemWidth, itemHeight, strlen(string)))
+    if (CCAtlasNode::initWithTexture(texture, itemWidth, itemHeight, strlen(string)))
     {
         m_uMapStartChar = startCharMap;
         this->setString(string);
         return true;
     }
     return false;
-}
-
-CCLabelAtlas* CCLabelAtlas::labelWithString(const char *string, const char *fntFile)
-{
-    return CCLabelAtlas::create(string, fntFile);
 }
 
 CCLabelAtlas* CCLabelAtlas::create(const char *string, const char *fntFile)
@@ -95,19 +93,22 @@ CCLabelAtlas* CCLabelAtlas::create(const char *string, const char *fntFile)
 
 bool CCLabelAtlas::initWithString(const char *theString, const char *fntFile)
 {
-    CCDictionary *dict = CCDictionary::createWithContentsOfFile(CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(fntFile));
-	
-    CCAssert(((CCString*)dict->objectForKey("version"))->intValue() == 1, "Unsupported version. Upgrade cocos2d version");
+  std::string pathStr = CCFileUtils::sharedFileUtils()->fullPathForFilename(fntFile);
+  std::string relPathStr = pathStr.substr(0, pathStr.find_last_of("/"))+"/";
+  CCDictionary *dict = CCDictionary::createWithContentsOfFile(pathStr.c_str());
+  
+  CCAssert(((CCString*)dict->objectForKey("version"))->intValue() == 1, "Unsupported version. Upgrade cocos2d version");
     
-    CCString *textureFilename = (CCString*)dict->objectForKey("textureFilename");
-    unsigned int width = ((CCString*)dict->objectForKey("itemWidth"))->intValue() / CC_CONTENT_SCALE_FACTOR();
-    unsigned int height = ((CCString*)dict->objectForKey("itemHeight"))->intValue() / CC_CONTENT_SCALE_FACTOR();
-    unsigned int startChar = ((CCString*)dict->objectForKey("firstChar"))->intValue();
-	
+  std::string texturePathStr = relPathStr + ((CCString*)dict->objectForKey("textureFilename"))->getCString();
+  CCString *textureFilename = CCString::create(texturePathStr);
+  unsigned int width = ((CCString*)dict->objectForKey("itemWidth"))->intValue() / CC_CONTENT_SCALE_FACTOR();
+  unsigned int height = ((CCString*)dict->objectForKey("itemHeight"))->intValue() / CC_CONTENT_SCALE_FACTOR();
+  unsigned int startChar = ((CCString*)dict->objectForKey("firstChar"))->intValue();
+  
 
-    this->initWithString(theString, textureFilename->getCString(), width, height, startChar);
+  this->initWithString(theString, textureFilename->getCString(), width, height, startChar);
     
-    return true;
+  return true;
 }
 
 //CCLabelAtlas - Atlas generation
@@ -164,7 +165,8 @@ void CCLabelAtlas::updateAtlasValues()
         quad.tr.vertices.x = (float)(i * m_uItemWidth + m_uItemWidth);
         quad.tr.vertices.y = (float)(m_uItemHeight);
         quad.tr.vertices.z = 0.0f;
-        ccColor4B c = { m_tColor.r, m_tColor.g, m_tColor.b, m_cOpacity };
+        
+        ccColor4B c = { _displayedColor.r, _displayedColor.g, _displayedColor.b, _displayedOpacity };
         quad.tl.colors = c;
         quad.tr.colors = c;
         quad.bl.colors = c;

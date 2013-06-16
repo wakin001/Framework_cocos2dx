@@ -10,23 +10,25 @@
 
 using namespace cocos2d;
 
-FWAbstractView::FWAbstractView()
+FWAbstractView::FWAbstractView() :
+    m_pModel(NULL)
 {
 }
 
 FWAbstractView::~FWAbstractView()
 {
+    CC_SAFE_DELETE(m_pModel);
 }
 
-bool FWAbstractView::init()
+// Create funciton.
+
+bool FWAbstractView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
 {
-	if ( !CCLayer::init() )
-	{
-		return false;
-	}
-    
-	return true;
+    m_pModel = model;
+    m_pDelegate = delegate;
+    return true;
 }
+
 
 void FWAbstractView::onEnterTransitionDidFinish()
 {
@@ -38,24 +40,10 @@ void FWAbstractView::onExit()
     CCLayer::onExit();
 }
 
-// Create funciton.
-static FWAbstractView *create(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
-{
-    FWAbstractView *view = FWAbstractView::create();
-    view->init(model, delegate);
-    return view;
-}
-
-void FWAbstractView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
-{
-    m_pModel = model;
-    m_pDelegate = delegate;
-}
-
 /**
  * Called if got the notification message.
  */
-void FWAbstractView::onNotificationCalled(CCNotificationObserver *notification)
+void FWAbstractView::onNotificationCalled(CCNotificationObserver *pNotification)
 {
     
 }
@@ -63,26 +51,26 @@ void FWAbstractView::onNotificationCalled(CCNotificationObserver *notification)
 /**
  * Get the touch point.
  */
-cocos2d::CCPoint FWAbstractView::locationFromTouch(CCTouch *touch)
+cocos2d::CCPoint FWAbstractView::locationFromTouch(CCTouch *pTouch)
 {
-    cocos2d::CCPoint touchLocation = touch->getLocation();
+    cocos2d::CCPoint touchLocation = pTouch->getLocation();
     return CCDirector::sharedDirector()->convertToGL(touchLocation);
 }
 
 /**
  * Get the touch point.
  */
-cocos2d::CCPoint FWAbstractView::locationFromTouches(CCSet *touches)
+cocos2d::CCPoint FWAbstractView::locationFromTouches(CCSet *pTouches)
 {
-    CCTouch *touch = (CCTouch *)touches->anyObject();
-    return locationFromTouch(touch);
+    CCTouch *pTouch = (CCTouch *)pTouches->anyObject();
+    return locationFromTouch(pTouch);
 }
 
 /**
  * Call it in every interval time.
  * Should call [scene scheduleWithInterval:interval] firstly.
  */
-void FWAbstractView::onUpdateWithInterval(float interval)
+void FWAbstractView::onUpdateWithInterval(float fInterval)
 {
     
 }

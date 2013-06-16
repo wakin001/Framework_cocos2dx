@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "FWAbstractModel.h"
+#include "FWMacro.h"
 
 /**
  * FWAbstractView Delegate
@@ -18,11 +19,11 @@
 class FWAbstractViewDelegate
 {
 public:
-    virtual bool                    touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *event);
-    virtual void                    touchesMoveWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *event);
-    virtual void                    touchesEndWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *event);
-    virtual void                    touchesCancelledWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *event);
-    virtual void                    onNodeTouched(cocos2d::CCNode *node);
+    virtual bool                    touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent) = 0;
+    virtual void                    touchesMoveWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent) = 0;
+    virtual void                    touchesEndWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent) = 0;
+    virtual void                    touchesCancelledWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent) = 0;
+    virtual void                    onNodeTouched(cocos2d::CCNode *pNode) = 0;
 
 };
 
@@ -31,26 +32,34 @@ class FWAbstractView : public cocos2d::CCLayer
 public:
     FWAbstractView();
     
-    ~FWAbstractView();
-    
-	virtual bool                    init();
-    
-    virtual void                    onExit();
-    
-    virtual void                    onEnterTransitionDidFinish();
-    
-	CREATE_FUNC(FWAbstractView);
+    virtual ~FWAbstractView();
     
     /**
      * Create funciton.
      */
-    static FWAbstractView           *create(FWAbstractModel *model, FWAbstractViewDelegate *delegate);
-    void                            init(FWAbstractModel *model, FWAbstractViewDelegate *delegate);
+    CREATE_FUNC(FWAbstractView);
+    CREATE_FUNC_TWO_PARAMETERS(FWAbstractView, FWAbstractModel*, model, FWAbstractViewDelegate*, delegate);
+
+    virtual bool                    init(FWAbstractModel *model = NULL, FWAbstractViewDelegate *delegate = NULL);
+    
+    
+    /**
+     * Macro
+     */
+    CC_SYNTHESIZE(FWAbstractModel *,           model,      Model);
+    CC_SYNTHESIZE(FWAbstractViewDelegate *,    delegate,   Delegate);
+    
+    /**
+     * Inherit methods
+     */
+    virtual void                    onExit();
+    
+    virtual void                    onEnterTransitionDidFinish();
     
     /**
      * Called if got the notification message.
      */
-    void                            onNotificationCalled(cocos2d::CCNotificationObserver *notification);
+    virtual void                    onNotificationCalled(cocos2d::CCNotificationObserver *notification);
     
     /**
      * Get the touch point.
@@ -66,7 +75,7 @@ public:
      * Call it in every interval time.
      * Should call [scene scheduleWithInterval:interval] firstly.
      */
-    void                            onUpdateWithInterval(float interval);
+    virtual void                    onUpdateWithInterval(float fInterval);
     
     virtual bool                    ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
     virtual void                    ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
@@ -74,10 +83,10 @@ public:
     virtual void                    ccTouchCancelled(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
     
 private:
-    FWAbstractModel                 *m_pModel;
+    FWAbstractModel *               m_pModel;
     
     // deleage object.
-    FWAbstractViewDelegate          *m_pDelegate;
+    FWAbstractViewDelegate *        m_pDelegate;
 };
 
 #endif // __FWAbstractView__LAYER_H__
