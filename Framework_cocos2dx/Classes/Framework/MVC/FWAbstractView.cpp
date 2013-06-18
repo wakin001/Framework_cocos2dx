@@ -10,8 +10,7 @@
 
 using namespace cocos2d;
 
-FWAbstractView::FWAbstractView() :
-    m_pModel(NULL)
+FWAbstractView::FWAbstractView()
 {
 }
 
@@ -23,8 +22,8 @@ FWAbstractView::~FWAbstractView()
 
 bool FWAbstractView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
 {
-    m_pModel = model;
-    m_pDelegate = delegate;
+    m_model = model;
+    m_delegate = delegate;
     return true;
 }
 
@@ -78,23 +77,23 @@ void FWAbstractView::onUpdateWithInterval(float fInterval)
 void FWAbstractView::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     CCPoint point = locationFromTouches(pTouches);
-    m_pDelegate->touchesBeganWithPoint(point, pEvent);
+    m_delegate->touchesBeganWithPoint(point, pEvent);
 }
 
 void FWAbstractView::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
     CCPoint point = locationFromTouches(pTouches);
-    m_pDelegate->touchesMoveWithPoint(point, pEvent);
+    m_delegate->touchesMoveWithPoint(point, pEvent);
 }
 
 void FWAbstractView::ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
     CCPoint point = locationFromTouches(pTouches);
-    m_pDelegate->touchesEndWithPoint(point, pEvent);
+    m_delegate->touchesEndWithPoint(point, pEvent);
 }
 
 void FWAbstractView::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
     CCPoint point = locationFromTouches(pTouches);
-    m_pDelegate->touchesCancelledWithPoint(point, pEvent);
+    m_delegate->touchesCancelledWithPoint(point, pEvent);
 }
