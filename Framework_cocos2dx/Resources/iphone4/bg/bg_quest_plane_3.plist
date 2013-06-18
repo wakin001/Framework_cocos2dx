@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>frames</key>
+	<dict>
+		<key>bg_quest_plane_3_1.png</key>
+		<dict>
+			<key>aliases</key>
+			<array/>
+			<key>spriteColorRect</key>
+			<string>{{0, 390}, {962, 250}}</string>
+			<key>spriteOffset</key>
+			<string>{0, -195}</string>
+			<key>spriteSize</key>
+			<string>{962, 250}</string>
+			<key>spriteSourceSize</key>
+			<string>{962, 640}</string>
+			<key>spriteTrimmed</key>
+			<true/>
+			<key>textureRect</key>
+			<string>{{0, 0}, {962, 250}}</string>
+			<key>textureRotated</key>
+			<false/>
+		</dict>
+		<key>bg_quest_plane_3_2.png</key>
+		<dict>
+			<key>aliases</key>
+			<array/>
+			<key>spriteColorRect</key>
+			<string>{{0, 402}, {962, 238}}</string>
+			<key>spriteOffset</key>
+			<string>{0, -201}</string>
+			<key>spriteSize</key>
+			<string>{962, 238}</string>
+			<key>spriteSourceSize</key>
+			<string>{962, 640}</string>
+			<key>spriteTrimmed</key>
+			<true/>
+			<key>textureRect</key>
+			<string>{{0, 258}, {962, 238}}</string>
+			<key>textureRotated</key>
+			<false/>
+		</dict>
+		<key>bg_quest_plane_3_3.png</key>
+		<dict>
+			<key>aliases</key>
+			<array/>
+			<key>spriteColorRect</key>
+			<string>{{0, 472}, {962, 168}}</string>
+			<key>spriteOffset</key>
+			<string>{0, -236}</string>
+			<key>spriteSize</key>
+			<string>{962, 168}</string>
+			<key>spriteSourceSize</key>
+			<string>{962, 640}</string>
+			<key>spriteTrimmed</key>
+			<true/>
+			<key>textureRect</key>
+			<string>{{0, 504}, {962, 168}}</string>
+			<key>textureRotated</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>version</key>
+		<string>1.5.8</string>
+		<key>format</key>
+		<integer>3</integer>
+		<key>size</key>
+		<string>{1024, 1024}</string>
+		<key>name</key>
+		<string>bg_quest_plane_3.zwoptex</string>
+		<key>premultipliedAlpha</key>
+		<false/>
+		<key>target</key>
+		<dict>
+			<key>name</key>
+			<string>@2x</string>
+			<key>textureFileName</key>
+			<string>bg_quest_plane_3</string>
+			<key>textureFileExtension</key>
+			<string>.png</string>
+			<key>coordinatesFileName</key>
+			<string>bg_quest_plane_3</string>
+			<key>coordinatesFileExtension</key>
+			<string>.plist</string>
+			<key>premultipliedAlpha</key>
+			<false/>
+		</dict>
+	</dict>
+</dict>
+</plist>
