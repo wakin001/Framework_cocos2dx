@@ -17,7 +17,6 @@ FWAbstractView::FWAbstractView() :
 
 FWAbstractView::~FWAbstractView()
 {
-    CC_SAFE_DELETE(m_pModel);
 }
 
 // Create funciton.
@@ -76,26 +75,26 @@ void FWAbstractView::onUpdateWithInterval(float fInterval)
 }
 
 
-bool FWAbstractView::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
+void FWAbstractView::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
-    return m_pDelegate->touchesBeganWithPoint(point, pEvent);
+    CCPoint point = locationFromTouches(pTouches);
+    m_pDelegate->touchesBeganWithPoint(point, pEvent);
 }
 
-void FWAbstractView::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
+void FWAbstractView::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
+    CCPoint point = locationFromTouches(pTouches);
     m_pDelegate->touchesMoveWithPoint(point, pEvent);
 }
 
-void FWAbstractView::ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
+void FWAbstractView::ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
+    CCPoint point = locationFromTouches(pTouches);
     m_pDelegate->touchesEndWithPoint(point, pEvent);
 }
 
-void FWAbstractView::ccTouchCancelled(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
+void FWAbstractView::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
+    CCPoint point = locationFromTouches(pTouches);
     m_pDelegate->touchesCancelledWithPoint(point, pEvent);
 }

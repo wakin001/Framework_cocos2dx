@@ -23,6 +23,10 @@ FirstView::~FirstView()
 
 bool FirstView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
 {
+    if (!FWAbstractView::init(model, delegate))
+    {
+        return false;
+    }
     // init sprite.
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
     
@@ -39,6 +43,7 @@ bool FirstView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
     CCMenu *pmMenu = CCMenu::create(pmiiBack, NULL);
     addChild(pmMenu);
     
+    setTouchEnabled(true);
     
     return true;
 }
@@ -60,4 +65,9 @@ void FirstView::onBackButtonClicked()
                                                              0.02f,
                                                              0.02f);
     addChild(paeEffect);
+}
+
+void FirstView::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
+{
+    onBackButtonClicked();
 }

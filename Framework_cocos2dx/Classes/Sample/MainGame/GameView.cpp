@@ -30,8 +30,9 @@ bool GameView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
     
     setTouchEnabled(true);
     m_gameState = KTE_GAMESTATE_START;
-    m_walkDuration = 160.0f;
+    m_walkDuration = 1.6f;
     m_walkSpeed = 160.0f;
+    m_totalTime = 0.0f;
     
     const char *layerNameBase = "bg_quest_plane";
     float speedFactors[SD_GAME_BACKGROUND_NUM] = {
@@ -54,16 +55,6 @@ bool GameView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
         m_backgroundBatchNodes->addObject(bgBatchNode);
     }
     return true;
-}
-
-bool GameView::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
-{
-    return true;
-}
-
-void GameView::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
-{
-    
 }
 
 void GameView::update(float delta)
@@ -94,6 +85,7 @@ void GameView::scrollBackground(float delta)
     m_totalTime += delta;
     if (m_totalTime > m_walkDuration)
     {
+        m_totalTime = 0.0f;
         m_gameState = KTE_GAMESTATE_IDLE;
     }
     

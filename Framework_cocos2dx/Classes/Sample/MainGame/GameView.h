@@ -32,9 +32,6 @@ public:
     CREATE_FUNC_TWO_PARAMETERS(GameView, FWAbstractModel*, model, FWAbstractViewDelegate*, delegate);
     virtual bool                    init(FWAbstractModel *model, FWAbstractViewDelegate *delegate);
     
-    virtual bool                    ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
-    void                            ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
-    
     // inherit methods.
     virtual void                    update(float delta);
     

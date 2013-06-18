@@ -30,11 +30,9 @@ bool GameViewController::init()
     
     m_pView = GameView::create(m_pModel, this);
     m_pView->retain();
-    m_pView->setTouchEnabled(true);
     addChild(m_pView);
     
     m_gameView = (GameView *)m_pView;
-    m_gameView->setGameState(KTE_GAMESTATE_SCROLL);
 
     // schedule update.
     scheduleUpdate();
