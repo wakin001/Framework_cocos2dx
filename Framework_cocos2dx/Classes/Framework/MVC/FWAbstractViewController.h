@@ -37,16 +37,6 @@ public:
 
     virtual bool                init(FWAbstractModel *model = NULL);
     
-    /**
-     * Macro
-     */
-    CC_SYNTHESIZE(FWAbstractModel *,           model,          Model);
-    CC_SYNTHESIZE(FWAbstractView *,            view,           View);
-    CC_SYNTHESIZE(bool,                        isDataLoaded,   IsDataLoaded);
-    CC_SYNTHESIZE(FWE_CHANGESCENE_TYPE,        type,           ChangeSceneType);
-    CC_SYNTHESIZE(FWE_TRANSITION,              transitionId,   TransitionId);
-    
-    
 #pragma mark - delegate methods
     
     virtual bool                touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
@@ -145,19 +135,18 @@ public:
 //    Class                       previousSceneClass();
     
 
+public:
+    /**
+     * Macro
+     */
+    CC_SYNTHESIZE(FWAbstractModel *,           m_model,          Model);
+    CC_SYNTHESIZE(FWAbstractView *,            m_view,           View);
+    CC_SYNTHESIZE(bool,                        m_isDataLoaded,   IsDataLoaded);
+    CC_SYNTHESIZE(FWE_CHANGESCENE_TYPE,        m_changeSceneType,ChangeSceneType);
+    CC_SYNTHESIZE(FWE_TRANSITION,              m_transitionId,   TransitionId);
     
 protected:
-    
-    FWAbstractModel             *m_pModel;
-    FWAbstractView              *m_pView;
-    
-    FWAbstractViewController    *m_pNextScene;
-    bool                        m_bIsDataLoaded;
-    
-    FWE_CHANGESCENE_TYPE        m_eChangeSceneType;
-    
-    FWE_TRANSITION              m_eTransitionId;
-    
+    FWAbstractViewController    *m_nextScene;
 };
 
 #endif // __FWAbstractViewController__NODE_H__

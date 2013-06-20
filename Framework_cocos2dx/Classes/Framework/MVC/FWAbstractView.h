@@ -42,13 +42,6 @@ public:
 
     virtual bool                    init(FWAbstractModel *model = NULL, FWAbstractViewDelegate *delegate = NULL);
     
-    
-    /**
-     * Macro
-     */
-    CC_SYNTHESIZE(FWAbstractModel *,           model,      Model);
-    CC_SYNTHESIZE(FWAbstractViewDelegate *,    delegate,   Delegate);
-    
     /**
      * Inherit methods
      */
@@ -77,16 +70,18 @@ public:
      */
     virtual void                    onUpdateWithInterval(float fInterval);
     
-    virtual bool                    ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
-    virtual void                    ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
-    virtual void                    ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
-    virtual void                    ccTouchCancelled(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
+    virtual void                    ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+    virtual void                    ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+    virtual void                    ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+    virtual void                    ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
     
-private:
-    FWAbstractModel *               m_pModel;
+public:
+    /**
+     * Macro Set/Get methods. 
+     */
+    CC_SYNTHESIZE(FWAbstractModel *,           m_model,      Model);
+    CC_SYNTHESIZE(FWAbstractViewDelegate *,    m_delegate,   Delegate);
     
-    // deleage object.
-    FWAbstractViewDelegate *        m_pDelegate;
 };
 
 #endif // __FWAbstractView__LAYER_H__

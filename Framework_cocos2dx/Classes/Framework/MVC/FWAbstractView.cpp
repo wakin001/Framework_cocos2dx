@@ -10,22 +10,20 @@
 
 using namespace cocos2d;
 
-FWAbstractView::FWAbstractView() :
-    m_pModel(NULL)
+FWAbstractView::FWAbstractView()
 {
 }
 
 FWAbstractView::~FWAbstractView()
 {
-    CC_SAFE_DELETE(m_pModel);
 }
 
 // Create funciton.
 
 bool FWAbstractView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
 {
-    m_pModel = model;
-    m_pDelegate = delegate;
+    m_model = model;
+    m_delegate = delegate;
     return true;
 }
 
@@ -76,26 +74,26 @@ void FWAbstractView::onUpdateWithInterval(float fInterval)
 }
 
 
-bool FWAbstractView::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
+void FWAbstractView::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
-    return m_pDelegate->touchesBeganWithPoint(point, pEvent);
+    CCPoint point = locationFromTouches(pTouches);
+    m_delegate->touchesBeganWithPoint(point, pEvent);
 }
 
-void FWAbstractView::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
+void FWAbstractView::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
-    m_pDelegate->touchesMoveWithPoint(point, pEvent);
+    CCPoint point = locationFromTouches(pTouches);
+    m_delegate->touchesMoveWithPoint(point, pEvent);
 }
 
-void FWAbstractView::ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
+void FWAbstractView::ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
-    m_pDelegate->touchesEndWithPoint(point, pEvent);
+    CCPoint point = locationFromTouches(pTouches);
+    m_delegate->touchesEndWithPoint(point, pEvent);
 }
 
-void FWAbstractView::ccTouchCancelled(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent)
+void FWAbstractView::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
-    CCPoint point = locationFromTouch(pTouch);
-    m_pDelegate->touchesCancelledWithPoint(point, pEvent);
+    CCPoint point = locationFromTouches(pTouches);
+    m_delegate->touchesCancelledWithPoint(point, pEvent);
 }

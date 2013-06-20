@@ -18,23 +18,21 @@ GameViewController::GameViewController()
 
 GameViewController::~GameViewController()
 {
-    CC_SAFE_DELETE(m_pModel);
-    CC_SAFE_DELETE(m_pView);
+    CC_SAFE_DELETE(m_model);
+    CC_SAFE_DELETE(m_view);
 }
 
 
 bool GameViewController::init()
 {
-    m_pModel = GameModel::create();
-    m_pModel->retain();
+    m_model = GameModel::create();
+    m_model->retain();
     
-    m_pView = GameView::create(m_pModel, this);
-    m_pView->retain();
-    m_pView->setTouchEnabled(true);
-    addChild(m_pView);
+    m_view = GameView::create(m_model, this);
+    m_view->retain();
+    addChild(m_view);
     
-    m_gameView = (GameView *)m_pView;
-    m_gameView->setGameState(KTE_GAMESTATE_SCROLL);
+    m_gameView = (GameView *)m_view;
 
     // schedule update.
     scheduleUpdate();

@@ -11,38 +11,38 @@
 using namespace cocos2d;
 
 FWAbstractViewController::FWAbstractViewController() :
-    m_pModel(NULL),
-    m_pView(NULL)
+    m_model(NULL),
+    m_view(NULL)
 {
 }
 
 FWAbstractViewController::FWAbstractViewController(FWAbstractModel * model) :
-    m_pModel(model),
-    m_pView(NULL)
+    m_model(model),
+    m_view(NULL)
 {
     
 }
 
 FWAbstractViewController::~FWAbstractViewController()
 {
-    CC_SAFE_RELEASE(m_pModel);
-    CC_SAFE_RELEASE(m_pView);
+    CC_SAFE_RELEASE(m_model);
+    CC_SAFE_RELEASE(m_view);
 }
 
 #pragma mark - Create function
 
 bool FWAbstractViewController::init(FWAbstractModel *model)
 {
-    m_pModel = model;
-    if (m_pModel != NULL)
+    m_model = model;
+    if (m_model != NULL)
     {
-        m_pModel->retain();
+        m_model->retain();
     }
     
-    m_eTransitionId = FWE_TRANS_FADE;
+    m_transitionId = FWE_TRANS_FADE;
     
-    m_bIsDataLoaded = true;
-    m_eChangeSceneType = FWE_CHANGESCENE_TYPE_PUSH;
+    m_isDataLoaded = true;
+    m_changeSceneType = FWE_CHANGESCENE_TYPE_PUSH;
     
     return true;
 }
@@ -91,17 +91,17 @@ void FWAbstractViewController::onNodeTouched(cocos2d::CCNode *pNode)
  */
 void FWAbstractViewController::executeChangingScene()
 {
-    if (m_pNextScene == NULL)
+    if (m_nextScene == NULL)
     {
         return;
     }
     // begine ignore interaction events.
     
     CCTransitionScene *pTranScene = NULL;
-    switch (m_eTransitionId)
+    switch (m_transitionId)
     {
         case FWE_TRANS_FADE:
-            pTranScene = CCTransitionScene::create(FWD_TRANSITION_TIME, m_pNextScene);
+            pTranScene = CCTransitionScene::create(FWD_TRANSITION_TIME, m_nextScene);
             break;
             
         default:
@@ -113,7 +113,7 @@ void FWAbstractViewController::executeChangingScene()
         return;
     }
     
-    switch (m_eChangeSceneType)
+    switch (m_changeSceneType)
     {
         case FWE_CHANGESCENE_TYPE_PUSH:
             CCDirector::sharedDirector()->pushScene(pTranScene);
@@ -143,11 +143,11 @@ void FWAbstractViewController::executeChangingScene()
  */
 void FWAbstractViewController::replaceScene(FWAbstractViewController *scene, FWE_TRANSITION transitionId)
 {
-    m_pNextScene = scene;
-    m_eChangeSceneType = FWE_CHANGESCENE_TYPE_REPLACE;
-    m_eTransitionId = transitionId;
+    m_nextScene = scene;
+    m_changeSceneType = FWE_CHANGESCENE_TYPE_REPLACE;
+    m_transitionId = transitionId;
     
-    if (scene->m_bIsDataLoaded)
+    if (scene->m_isDataLoaded)
     {
         executeChangingScene();
     }
@@ -158,11 +158,11 @@ void FWAbstractViewController::replaceScene(FWAbstractViewController *scene, FWE
  */
 void FWAbstractViewController::pushScene(FWAbstractViewController *scene, FWE_TRANSITION transitionId)
 {
-    m_pNextScene = scene;
-    m_eChangeSceneType = FWE_CHANGESCENE_TYPE_PUSH;
-    m_eTransitionId = transitionId;
+    m_nextScene = scene;
+    m_changeSceneType = FWE_CHANGESCENE_TYPE_PUSH;
+    m_transitionId = transitionId;
     
-    if (scene->m_bIsDataLoaded)
+    if (scene->m_isDataLoaded)
     {
         executeChangingScene();
     }
@@ -204,7 +204,7 @@ void FWAbstractViewController::clearAllScenesExceptSelf()
  */
 void FWAbstractViewController::showLoadingView()
 {
-    m_bIsDataLoaded = false;
+    m_isDataLoaded = false;
 //    [[FWLoadingViewManager sharedManager] showLoadingView];
 }
 
