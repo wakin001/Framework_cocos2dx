@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7320AE6B1772D933008EF0FF /* FWGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7320AE691772D932008EF0FF /* FWGame.cpp */; };
+		7320AE6E1772DB23008EF0FF /* FWDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7320AE6C1772DB23008EF0FF /* FWDevice.cpp */; };
 		73881FEC17704EBF00B45AF6 /* FWActionBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FC517704EBF00B45AF6 /* FWActionBase.cpp */; };
 		73881FED17704EBF00B45AF6 /* FWActionEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FC717704EBF00B45AF6 /* FWActionEffect.cpp */; };
 		73881FEE17704EBF00B45AF6 /* FWAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FC917704EBF00B45AF6 /* FWAnimation.cpp */; };
@@ -327,6 +329,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7320AE691772D932008EF0FF /* FWGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWGame.cpp; sourceTree = "<group>"; };
+		7320AE6A1772D932008EF0FF /* FWGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWGame.h; sourceTree = "<group>"; };
+		7320AE6C1772DB23008EF0FF /* FWDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWDevice.cpp; sourceTree = "<group>"; };
+		7320AE6D1772DB23008EF0FF /* FWDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDevice.h; sourceTree = "<group>"; };
 		73881FC517704EBF00B45AF6 /* FWActionBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWActionBase.cpp; sourceTree = "<group>"; };
 		73881FC617704EBF00B45AF6 /* FWActionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWActionBase.h; sourceTree = "<group>"; };
 		73881FC717704EBF00B45AF6 /* FWActionEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWActionEffect.cpp; sourceTree = "<group>"; };
@@ -1051,6 +1057,10 @@
 				73881FCE17704EBF00B45AF6 /* FWCommons.cpp */,
 				73881FCF17704EBF00B45AF6 /* FWCommons.h */,
 				73881FD017704EBF00B45AF6 /* FWMacro.h */,
+				7320AE691772D932008EF0FF /* FWGame.cpp */,
+				7320AE6A1772D932008EF0FF /* FWGame.h */,
+				7320AE6C1772DB23008EF0FF /* FWDevice.cpp */,
+				7320AE6D1772DB23008EF0FF /* FWDevice.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2773,6 +2783,8 @@
 				73881FF817704EC000B45AF6 /* FirstModel.cpp in Sources */,
 				73881FF917704EC000B45AF6 /* FirstScene.cpp in Sources */,
 				73881FFA17704EC000B45AF6 /* FirstView.cpp in Sources */,
+				7320AE6B1772D933008EF0FF /* FWGame.cpp in Sources */,
+				7320AE6E1772DB23008EF0FF /* FWDevice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

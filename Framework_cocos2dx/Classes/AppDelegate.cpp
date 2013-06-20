@@ -13,6 +13,7 @@
 #include "HelloWorldScene.h"
 #include "GameViewController.h"
 #include "FirstScene.h"
+#include "FWGame.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -37,6 +38,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
+    
+    FWGame::sharedGame()->setupScreenResolution();
 
     // create a scene. it's an autorelease object
 //    FirstScene *pScene = FirstScene::create();
