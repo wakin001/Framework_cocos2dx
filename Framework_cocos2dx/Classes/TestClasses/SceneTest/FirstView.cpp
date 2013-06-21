@@ -31,15 +31,19 @@ bool FirstView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
     
     //background.
-    CCSprite *bgSprite = CCSprite::create("bg_town_0.png");
+//    CCSprite *bgSprite = CCSprite::create("bg_town_0.png");
+    CCSprite *bgSprite = CCSprite::create("underwater-fish-in-hawaii_1024x768.png");
+    bgSprite->setAnchorPoint(CCPointZero);
     addChild(bgSprite);
-    bgSprite->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
+//    bgSprite->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
 
     
     // back button.
+    CCSize visibleOrigin = CCDirector::sharedDirector()->getVisibleOrigin();
     CCMenuItemImage *pmiiBack = CCMenuItemImage::create("btn.png", "btn.png", "btn.png", this, menu_selector(FirstView::onBackButtonClicked));
-    pmiiBack->setPosition(ccp(screenSize.width / 2 - pmiiBack->getContentSize().width / 2,
-                              -screenSize.height / 2 + pmiiBack->getContentSize().height / 2));
+    CCPoint point = ccp(screenSize.width / 2 - pmiiBack->getContentSize().width / 2 - visibleOrigin.width,
+                        -screenSize.height / 2 + pmiiBack->getContentSize().height / 2 - visibleOrigin.height);
+    pmiiBack->setPosition(point);
     CCMenu *pmMenu = CCMenu::create(pmiiBack, NULL);
     addChild(pmMenu);
     

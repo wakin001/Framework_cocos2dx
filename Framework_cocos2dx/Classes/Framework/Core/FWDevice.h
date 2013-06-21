@@ -42,10 +42,13 @@ public:
     bool                    isIPhoneRetina();
     bool                    isIPhone5();
     
+    bool                    isPlateformIOS();
+    
     void                    updateRunningDevice();
     
 protected:
     FWE_DEVICE              m_deviceType;
+    bool                    m_isIOS;
 };
 
 #endif // __FWDevice__OBJECT_H__

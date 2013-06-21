@@ -45,19 +45,25 @@ bool FWDevice::isIPhone5()
     return (m_deviceType == FWE_DEVICE_IPHONE5);
 }
 
+bool FWDevice::isPlateformIOS()
+{
+    TargetPlatform platform = CCApplication::sharedApplication()->getTargetPlatform();
+    return (platform == kTargetIphone || platform == kTargetIpad);
+}
+
 void FWDevice::updateRunningDevice()
 {
+    CCSize winsize = CCDirector::sharedDirector()->getWinSize();
     TargetPlatform platform = CCApplication::sharedApplication()->getTargetPlatform();
     switch (platform)
     {
         case kTargetIphone:
         {
-            CCSize winsize = CCDirector::sharedDirector()->getWinSize();
-            if (winsize.width > FWD_IPHONE_LANDSCAPE_WIDTH || winsize.height > FWD_IPHONE_LANDSCAPE_WIDTH)
+            if (winsize.width > FWD_IPHONE_LANDSCAPE_WIDTH * 2 || winsize.height > FWD_IPHONE_LANDSCAPE_WIDTH * 2)
             {
                 m_deviceType = FWE_DEVICE_IPHONE5;
             }
-            else if( CC_CONTENT_SCALE_FACTOR() == 2 )
+            else if(winsize.width > FWD_IPHONE_LANDSCAPE_WIDTH || winsize.height > FWD_IPHONE_LANDSCAPE_WIDTH)
             {
                 m_deviceType = FWE_DEVICE_IPHONE_RETINA;
             }
@@ -69,7 +75,8 @@ void FWDevice::updateRunningDevice()
         }
         case kTargetIpad:
         {
-            if (CC_CONTENT_SCALE_FACTOR() == 2)
+            if (fabsf(winsize.width - FWD_IPAD_LANDSCAPE_WIDTH * 2) < FLT_EPSILON ||
+                fabsf(winsize.height - FWD_IPAD_LANDSCAPE_WIDTH * 2) < FLT_EPSILON)
             {
                 m_deviceType = FWE_DEVICE_IPAD_RETINA;
             }

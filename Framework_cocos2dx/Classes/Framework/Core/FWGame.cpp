@@ -37,68 +37,58 @@ FWGame::~FWGame()
  */
 void FWGame::setupScreenResolution()
 {
-    CCDirector *director = CCDirector::sharedDirector();
-    CCSize winsize = director->getWinSize();
-    CCSize winsizeInPixel = director->getWinSizeInPixels();
-    CCSize visibleSize = director->getVisibleSize();
-    CCSize visibleOrigin = director->getVisibleOrigin();
-    
-    CCSize framesize = CCEGLView::sharedOpenGLView()->getFrameSize();
-    
     CCDirector *pDirector = CCDirector::sharedDirector();
     CCSize screenSize = CCEGLView::sharedOpenGLView()->getFrameSize();
     std::vector<std::string> searchPaths;
     std::vector<std::string> resDirOrders;
     
     // Set
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)     // iOS platform
+        
     if (m_device->isIPhoneRetina())
     {
         //3.5-inch
         resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
         
+        
+        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(400,
+                                                               200,
+                                                               kResolutionNoBorder);
+//        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
+//                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
+//                                                               kResolutionNoBorder);
+        
+        pDirector->setContentScaleFactor(768.0f / 200);         //2倍のスケールサイズ
+    }
+    else if (m_device->isIPhone5()) // 4-inch
+    {
+        resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
+        
         pDirector->setContentScaleFactor(2.f);         //2倍のスケールサイズ
+        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE5_LANDSCAPE_WIDTH,
+                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
+                                                               kResolutionShowAll);
+    }
+    else if (m_device->isIPhone())
+    {
+        resDirOrders.push_back("resources-iphone");  //Resources/Published-iOS/resources-iphone
+        
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                                kResolutionShowAll);
     }
-//    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(568 * 2, 320 * 2, kResolutionNoBorder);
-//    TargetPlatform platform = CCApplication::sharedApplication()->getTargetPlatform();
-//    if (platform == kTargetIphone || platform == kTargetIpad)
-//    {
-//        searchPaths.push_back("Published-iOS"); // Resources/Published-iOS
-//        if (screenSize.height > 480)
-//        {
-//            //Retainaによる幅調整
-//            resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
-//            pDirector->setContentScaleFactor(2.f);         //2倍のスケールサイズ
-//            if (screenSize.width==1136.0 || screenSize.height==1136.0 )
-//            {
-//                //4-inch
-//                CCEGLView::sharedOpenGLView()->setDesignResolutionSize(568, 320, kResolutionShowAll);
-//            }
-//            else
-//            {
-//                //3.5-inch
-//                CCEGLView::sharedOpenGLView()->setDesignResolutionSize(480, 320, kResolutionShowAll);
-//            }
-//        }
-//        else
-//        {
-//            //通常サイズ
-//            resDirOrders.push_back("resources-iphone");    //Resources/Published-iOS/resources-iphone
-//            CCEGLView::sharedOpenGLView()->setDesignResolutionSize(480, 320, kResolutionShowAll);
-//        }
-//        
-//    }
-//    else
-//    {
-//        // iOS以外（Androidなど)
-//        searchPaths.push_back("Published-iOS"); // Resources/Published-iOS
-//        resDirOrders.push_back("resources-iphone");
-//        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(480, 320, kResolutionExactFit);
-//        
-//    }
-//    CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
-//    CCFileUtils::sharedFileUtils()->setSearchResolutionsOrder(resDirOrders);
+
+#else        // Other plateform. (Android...)
+
+    searchPaths.push_back("Published-iOS"); // Resources/Published-iOS
+    resDirOrders.push_back("resources-iphone");
+    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
+                                                           FWD_IPHONE_LANDSCAPE_HEIGHT,
+                                                           kResolutionExactFit);
+
+#endif
+    
+    CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
+    CCFileUtils::sharedFileUtils()->setSearchResolutionsOrder(resDirOrders);
 }
 
