@@ -13,6 +13,7 @@
 #include "HelloWorldScene.h"
 #include "GameViewController.h"
 #include "FirstScene.h"
+#include "FWGame.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -31,20 +32,34 @@ bool AppDelegate::applicationDidFinishLaunching()
     // initialize director
     CCDirector *pDirector = CCDirector::sharedDirector();
     pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
-
+    
     // turn on display FPS
     pDirector->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
+    
+    FWGame::sharedGame()->setupScreenResolution();
+    
+    CCSize frameSize = CCEGLView::sharedOpenGLView()->getFrameSize();
+    CCLOG("framesize : %f, %f", frameSize.width, frameSize.height);
+    
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCLOG("winSize : %f, %f", winSize.width, winSize.height);
+   
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCLOG("visibleSize : %f, %f", visibleSize.width, visibleSize.height);
+
+    CCSize visibleOrigin = CCDirector::sharedDirector()->getVisibleOrigin();
+    CCLOG("visibleOrigin : %f, %f", visibleOrigin.width, visibleOrigin.height);
 
     // create a scene. it's an autorelease object
-//    FirstScene *pScene = FirstScene::create();
-//    // run
-//    pDirector->runWithScene(pScene);
+    FirstScene *pScene = FirstScene::create();
+    // run
+    pDirector->runWithScene(pScene);
     
-    GameViewController *mainScene = GameViewController::create();
-    pDirector->runWithScene(mainScene);
+//    GameViewController *mainScene = GameViewController::create();
+//    pDirector->runWithScene(mainScene);
 
     return true;
 }
