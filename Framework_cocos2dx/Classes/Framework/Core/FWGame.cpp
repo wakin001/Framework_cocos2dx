@@ -50,15 +50,11 @@ void FWGame::setupScreenResolution()
         //3.5-inch
         resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
         
-        
-        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(400,
-                                                               200,
+        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
+                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                                kResolutionNoBorder);
-//        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
-//                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
-//                                                               kResolutionNoBorder);
         
-        pDirector->setContentScaleFactor(768.0f / 200);         //2倍のスケールサイズ
+        pDirector->setContentScaleFactor(screenSize.height / FWD_IPHONE_LANDSCAPE_HEIGHT);         //2倍のスケールサイズ
     }
     else if (m_device->isIPhone5()) // 4-inch
     {
@@ -76,6 +72,27 @@ void FWGame::setupScreenResolution()
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                                kResolutionShowAll);
+    }
+    else if (m_device->isIPad())
+    {
+        resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
+        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
+                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
+                                                               kResolutionExactFit);
+        float scaleFactor = screenSize.height / FWD_IPHONE_LANDSCAPE_HEIGHT;
+//        float scaleFactor = screenSize.width / FWD_IPHONE_LANDSCAPE_WIDTH;
+//        float scaleFactor = 640.0f / FWD_IPHONE_LANDSCAPE_HEIGHT;
+//        float scaleFactor = 1136.0f / FWD_IPHONE_LANDSCAPE_WIDTH;
+        pDirector->setContentScaleFactor(scaleFactor);         //2倍のスケールサイズ
+    }
+    else if (m_device->isIPadRetina())
+    {
+        resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
+        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
+                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
+                                                               kResolutionNoBorder);
+        
+        pDirector->setContentScaleFactor(screenSize.height / FWD_IPHONE_LANDSCAPE_HEIGHT);         //2倍のスケールサイズ
     }
 
 #else        // Other plateform. (Android...)

@@ -2892,6 +2892,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = Framework_cocos2dx/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Framework_cocos2dx/libs/cocos2dx/platform/third_party/ios/libraries\"",
@@ -2904,6 +2905,7 @@
 					"-websockets",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"Framework_cocos2dx/libs\"";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2919,6 +2921,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = Framework_cocos2dx/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Framework_cocos2dx/libs/cocos2dx/platform/third_party/ios/libraries\"",
@@ -2931,6 +2934,7 @@
 					"-websockets",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"Framework_cocos2dx/libs\"";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
