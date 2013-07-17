@@ -54,12 +54,12 @@ bool AppDelegate::applicationDidFinishLaunching()
     CCLOG("visibleOrigin : %f, %f", visibleOrigin.width, visibleOrigin.height);
 
     // create a scene. it's an autorelease object
-    FirstScene *pScene = FirstScene::create();
-    // run
-    pDirector->runWithScene(pScene);
+//    FirstScene *pScene = FirstScene::create();
+//    // run
+//    pDirector->runWithScene(pScene);
     
-//    GameViewController *mainScene = GameViewController::create();
-//    pDirector->runWithScene(mainScene);
+    GameViewController *mainScene = GameViewController::create();
+    pDirector->runWithScene(mainScene);
 
     return true;
 }

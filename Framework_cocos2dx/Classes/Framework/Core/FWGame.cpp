@@ -51,14 +51,11 @@ void FWGame::setupScreenResolution()
         resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
         
         
-        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(400,
-                                                               200,
+        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
+                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                                kResolutionNoBorder);
-//        CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
-//                                                               FWD_IPHONE_LANDSCAPE_HEIGHT,
-//                                                               kResolutionNoBorder);
         
-        pDirector->setContentScaleFactor(768.0f / 200);         //2倍のスケールサイズ
+        pDirector->setContentScaleFactor(2.0f);         //2倍のスケールサイズ
     }
     else if (m_device->isIPhone5()) // 4-inch
     {
