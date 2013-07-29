@@ -97,7 +97,7 @@ HelloWorld::~HelloWorld()
     delete world;
     world = NULL;
     
-    //delete m_debugDraw;
+    delete m_debugDraw;
 }
 
 void HelloWorld::initPhysics()
@@ -114,8 +114,8 @@ void HelloWorld::initPhysics()
 
     world->SetContinuousPhysics(true);
 
-//     m_debugDraw = new GLESDebugDraw( PTM_RATIO );
-//     world->SetDebugDraw(m_debugDraw);
+     m_debugDraw = new extension::GLESDebugDraw( PTM_RATIO );
+     world->SetDebugDraw(m_debugDraw);
 
     uint32 flags = 0;
     flags += b2Draw::e_shapeBit;
@@ -123,7 +123,7 @@ void HelloWorld::initPhysics()
     //        flags += b2Draw::e_aabbBit;
     //        flags += b2Draw::e_pairBit;
     //        flags += b2Draw::e_centerOfMassBit;
-    //m_debugDraw->SetFlags(flags);
+    m_debugDraw->SetFlags(flags);
 
 
     // Define the ground body.

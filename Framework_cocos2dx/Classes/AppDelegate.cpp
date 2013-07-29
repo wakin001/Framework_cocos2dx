@@ -58,9 +58,11 @@ bool AppDelegate::applicationDidFinishLaunching()
 //    // run
 //    pDirector->runWithScene(pScene);
     
-    GameViewController *mainScene = GameViewController::create();
-    pDirector->runWithScene(mainScene);
-
+//    GameViewController *mainScene = GameViewController::create();
+//    pDirector->runWithScene(mainScene);
+    
+    pDirector->runWithScene(HelloWorld::scene());
+    
     return true;
 }
 
