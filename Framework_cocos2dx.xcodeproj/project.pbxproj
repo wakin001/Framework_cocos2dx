@@ -25,6 +25,7 @@
 		73881FF817704EC000B45AF6 /* FirstModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FE617704EBF00B45AF6 /* FirstModel.cpp */; };
 		73881FF917704EC000B45AF6 /* FirstScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FE817704EBF00B45AF6 /* FirstScene.cpp */; };
 		73881FFA17704EC000B45AF6 /* FirstView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FEA17704EBF00B45AF6 /* FirstView.cpp */; };
+		7394B74217A1053D004A9B50 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7394B74017A1053D004A9B50 /* GLES-Render.cpp */; };
 		73D5222217704C8A00BEF90C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D5222117704C8A00BEF90C /* QuartzCore.framework */; };
 		73D5222417704C8A00BEF90C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D5222317704C8A00BEF90C /* OpenGLES.framework */; };
 		73D5222617704C8A00BEF90C /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D5222517704C8A00BEF90C /* OpenAL.framework */; };
@@ -368,6 +369,8 @@
 		73881FE917704EBF00B45AF6 /* FirstScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstScene.h; sourceTree = "<group>"; };
 		73881FEA17704EBF00B45AF6 /* FirstView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirstView.cpp; sourceTree = "<group>"; };
 		73881FEB17704EBF00B45AF6 /* FirstView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstView.h; sourceTree = "<group>"; };
+		7394B74017A1053D004A9B50 /* GLES-Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "GLES-Render.cpp"; sourceTree = "<group>"; };
+		7394B74117A1053D004A9B50 /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLES-Render.h"; sourceTree = "<group>"; };
 		73D5221E17704C8A00BEF90C /* Framework_cocos2dx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Framework_cocos2dx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73D5222117704C8A00BEF90C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		73D5222317704C8A00BEF90C /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -2384,6 +2387,8 @@
 		73D525F417704C9200BEF90C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7394B74017A1053D004A9B50 /* GLES-Render.cpp */,
+				7394B74117A1053D004A9B50 /* GLES-Render.h */,
 				73881FC317704EBF00B45AF6 /* Framework */,
 				73881FD917704EBF00B45AF6 /* Sample */,
 				73881FE417704EBF00B45AF6 /* TestClasses */,
@@ -2809,6 +2814,7 @@
 				73881FFA17704EC000B45AF6 /* FirstView.cpp in Sources */,
 				7320AE6B1772D933008EF0FF /* FWGame.cpp in Sources */,
 				7320AE6E1772DB23008EF0FF /* FWDevice.cpp in Sources */,
+				7394B74217A1053D004A9B50 /* GLES-Render.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

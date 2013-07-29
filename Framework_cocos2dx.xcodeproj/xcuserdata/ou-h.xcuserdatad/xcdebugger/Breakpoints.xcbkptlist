@@ -20,19 +20,6 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Framework_cocos2dx/Classes/Framework/Core/FWGame.cpp"
-         timestampString = "393501119.762522"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "53"
-         endingLineNumber = "53"
-         landmarkName = "FWGame::setupScreenResolution()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "Framework_cocos2dx/libs/cocos2dx/platform/CCEGLViewProtocol.cpp"
          timestampString = "393502347.666021"
          startingColumnNumber = "9223372036854775807"
