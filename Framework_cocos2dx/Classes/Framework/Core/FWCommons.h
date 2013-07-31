@@ -30,6 +30,10 @@
 #define FWD_SAFE_RELEASE(x)                         [x release], x = nil
 #endif
 
+#ifndef PTM_RATIO
+#define PTM_RATIO 32
+#endif
+
 /**
  * Server Http path.
  */

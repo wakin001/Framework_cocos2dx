@@ -49,19 +49,10 @@ void FWAbstractView::onNotificationCalled(CCNotificationObserver *pNotification)
 /**
  * Get the touch point.
  */
-cocos2d::CCPoint FWAbstractView::locationFromTouch(CCTouch *pTouch)
-{
-    cocos2d::CCPoint touchLocation = pTouch->getLocation();
-    return CCDirector::sharedDirector()->convertToGL(touchLocation);
-}
-
-/**
- * Get the touch point.
- */
 cocos2d::CCPoint FWAbstractView::locationFromTouches(CCSet *pTouches)
 {
     CCTouch *pTouch = (CCTouch *)pTouches->anyObject();
-    return locationFromTouch(pTouch);
+    return pTouch->getLocation();
 }
 
 /**

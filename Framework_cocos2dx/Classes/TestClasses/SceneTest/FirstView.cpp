@@ -31,8 +31,8 @@ bool FirstView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
     
     //background.
-//    CCSprite *bgSprite = CCSprite::create("bg_town_0.png");
-    CCSprite *bgSprite = CCSprite::create("underwater-fish-in-hawaii_1024x768.png");
+    CCSprite *bgSprite = CCSprite::create("bg_town_0.png");
+//    CCSprite *bgSprite = CCSprite::create("underwater-fish-in-hawaii_1024x768.png");
     bgSprite->setAnchorPoint(CCPointZero);
     addChild(bgSprite);
 //    bgSprite->setPosition(ccp(screenSize.width / 2, screenSize.height / 2));
@@ -47,8 +47,7 @@ bool FirstView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
     CCMenu *pmMenu = CCMenu::create(pmiiBack, NULL);
     addChild(pmMenu);
     
-    setTouchEnabled(true);
-    
+    setTouchEnabled(true);    
     return true;
 }
 

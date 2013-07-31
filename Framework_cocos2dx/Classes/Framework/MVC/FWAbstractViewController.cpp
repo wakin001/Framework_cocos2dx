@@ -280,6 +280,11 @@ void FWAbstractViewController::setBGM()
     
 }
 
+void FWAbstractViewController::update(float delta)
+{
+    m_view->update(delta);
+}
+
 /**
  *  Get Previous scene class
  *  If there is one scene in SceneStacks, return nil

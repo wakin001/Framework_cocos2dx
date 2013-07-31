@@ -57,11 +57,6 @@ public:
     /**
      * Get the touch point.
      */
-    cocos2d::CCPoint                locationFromTouch(cocos2d::CCTouch *touch);
-    
-    /**
-     * Get the touch point.
-     */
     cocos2d::CCPoint                locationFromTouches(cocos2d::CCSet *touches);
     
     /**

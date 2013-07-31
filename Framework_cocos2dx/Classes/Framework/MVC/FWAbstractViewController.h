@@ -134,6 +134,8 @@ public:
      */
 //    Class                       previousSceneClass();
     
+    virtual void                update(float delta);
+    
 
 public:
     /**
