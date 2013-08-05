@@ -9,7 +9,6 @@
 #ifndef __FWRayCastCallback__OBJECT_H__
 #define __FWRayCastCallback__OBJECT_H__
 
-#include "PolygonSprite.h"
 #include "Box2D.h"
 
 class FWRayCastCallback : public b2RayCastCallback

@@ -43,3 +43,8 @@ long Machtimer::currentTimeInMS() {
     return (now.tv_sec * 1000 + now.tv_usec /1000.0)/10;
 }
 
+double Machtimer::currentTimeInSecond()
+{    
+    return currentTimeInMS() * 0.001f;
+}
+

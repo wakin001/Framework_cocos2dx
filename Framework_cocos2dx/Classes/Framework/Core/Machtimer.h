@@ -28,7 +28,10 @@ public:
     // return elasped of time in MS
     long elapsedMS();
     static void initialize();
+    //Current time in micro second
     static long currentTimeInMS();
+    //Current time in second
+    static double currentTimeInSecond();
 };
 
 #endif // __Mathtimer__OBJECT_H__

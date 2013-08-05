@@ -1,13 +1,13 @@
 //
-//  PolygonSprite.h
+//  FWPolygonSprite.h
 //  Framework_cocos2dx
 //
 //  Created by ou-h on 13/07/29.
 //  Copyright 2013年 Erawppa Co., Ltd.. All rights reserved.
 //
 
-#ifndef __PolygonSprite__OBJECT_H__
-#define __PolygonSprite__OBJECT_H__
+#ifndef __FWPolygonSprite__OBJECT_H__
+#define __FWPolygonSprite__OBJECT_H__
 
 #include "cocos2d.h"
 #include "Box2D.h"
@@ -16,16 +16,16 @@
 
 using namespace cocos2d;
 
-class PolygonSprite : public PRFilledPolygon
+class FWPolygonSprite : public PRFilledPolygon
 {
 public:
-    PolygonSprite();
+    FWPolygonSprite();
     
-    ~PolygonSprite();
+    ~FWPolygonSprite();
     
-    static PolygonSprite *  spriteWithTexture(CCTexture2D *texture, b2Body *body, bool original);
-    static PolygonSprite *  spriteWithFile(const char *filename, b2Body *body, bool original);
-    static PolygonSprite *  spriteWithWorld(b2World *world);
+    static FWPolygonSprite *  spriteWithTexture(CCTexture2D *texture, b2Body *body, bool original);
+    static FWPolygonSprite *  spriteWithFile(const char *filename, b2Body *body, bool original);
+    static FWPolygonSprite *  spriteWithWorld(b2World *world);
 
     /**
      * Our main initialization. PRFilledPolygon needs a texture and all the vertices of the polygon it fills. 
@@ -33,15 +33,15 @@ public:
      * them from the sprite’s Box2D body. After passing them to PRFilledPolygon, it proceeds to initialize the 
      * variables that you have previously declared.
      */
-    bool                    initWithTexture(CCTexture2D *texture, b2Body *body, bool original);
+    virtual bool            initWithTexture(CCTexture2D *texture, b2Body *body, bool original);
     
     /**
      * This adds the texture from our file and passes everything to initWithTexture.
      */
-    bool                    initWithFile(const char *filename, b2Body *body, bool original);
+    virtual bool            initWithFile(const char *filename, b2Body *body, bool original);
     
     /**
-     * This is intended for subclasses of PolygonSprite so you do nothing except return nil, and deal with it later.
+     * This is intended for subclasses of FWPolygonSprite so you do nothing except return nil, and deal with it later.
      */
     virtual bool            initWithWorld(b2World *world);
     
@@ -67,7 +67,7 @@ public:
 public:
     //  This is the Box2D body that is attached to our sprite. It is needed for physics simulation.
     CC_SYNTHESIZE(b2Body *,         m_body,         Body);
-    // Complete and sliced sprites will use the same PolygonSprite class, as such, differentiating
+    // Complete and sliced sprites will use the same FWPolygonSprite class, as such, differentiating
     // between the two will be important. If this is YES, it means that it is the uncut, or original
     // object that you created, otherwise, it is just a piece of the whole.
     CC_SYNTHESIZE(bool,             m_original,     Original);
@@ -89,4 +89,4 @@ protected:
     
 };
 
-#endif // __PolygonSprite__OBJECT_H__
+#endif // __FWPolygonSprite__OBJECT_H__

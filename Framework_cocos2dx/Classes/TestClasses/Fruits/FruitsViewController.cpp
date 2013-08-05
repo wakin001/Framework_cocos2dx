@@ -8,8 +8,26 @@
 
 #include "FruitsViewController.h"
 #include "Machtimer.h"
+#include "PolygonSprite.h"
 
 using namespace cocos2d;
+
+int comparator(const void *a, const void *b)
+{
+    const b2Vec2 *va = (const b2Vec2 *)a;
+    const b2Vec2 *vb = (const b2Vec2 *)b;
+    
+    if (va->x > vb->x)
+    {
+        return 1;
+    }
+    else if (va->x < vb->x)
+    {
+        return -1;
+    }
+    return 0;
+}
+
 
 FruitsViewController::FruitsViewController()
 :   m_startPoint(CCPointZero),
@@ -24,7 +42,7 @@ FruitsViewController::~FruitsViewController()
 
 bool FruitsViewController::init(FruitsModel * model)
 {
-    if (!FWAbstractViewController::init(model))
+    if (!FWPhysicsViewController::init(model))
     {
         return false;
     }
@@ -36,10 +54,13 @@ bool FruitsViewController::init(FruitsModel * model)
     m_view = FruitsView::create(model, this);
     addChild(m_view);
     
-    initPhysics();
-    (dynamic_cast<FruitsView *>(m_view))->initSprites(m_world);
+    m_fruitsView = dynamic_cast<FruitsView *>(m_view);
+    m_fruitsView->initSprites(m_world);
     
     m_raycastCallback = new FWRayCastCallback();
+    
+    m_nextTossTime = Machtimer::currentTimeInSecond() + 1;
+    m_queuedForToss = 0;
     
     scheduleUpdate();
     
@@ -64,6 +85,9 @@ void FruitsViewController::update(float delta)
     FWPhysicsViewController::update(delta);
     
     checkAndSliceObjects();
+    clearSprites();
+    
+    spriteLoop();
 }
 
 bool FruitsViewController::touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent)
@@ -94,23 +118,6 @@ void FruitsViewController::touchesMoveWithPoint(cocos2d::CCPoint point, cocos2d:
 void FruitsViewController::touchesEndWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent)
 {
     clearSlices();
-}
-
-
-int FruitsViewController::comparator(const void *a, const void *b)
-{
-    const b2Vec2 *va = (const b2Vec2 *)a;
-    const b2Vec2 *vb = (const b2Vec2 *)b;
-    
-    if (va->x > vb->x)
-    {
-        return 1;
-    }
-    else if (va->x < vb->x)
-    {
-        return -1;
-    }
-    return 0;
 }
 
 b2Vec2 * FruitsViewController::arrangeVertices(b2Vec2 *vertices, int count)
@@ -183,8 +190,8 @@ void FruitsViewController::splitPolygonSprite(PolygonSprite *sprite)
     //step 1:
     //the entry and exit point of our cut are considered vertices of our two new shapes, so you add these before anything else
     sprite1Vertices[sprite1VertexCount++] = entryPoint;
-    sprite1Vertices[sprite1VertexCount++] = entryPoint;
-    sprite2Vertices[sprite2VertexCount++] = exitPoint;
+    sprite1Vertices[sprite1VertexCount++] = exitPoint;
+    sprite2Vertices[sprite2VertexCount++] = entryPoint;
     sprite2Vertices[sprite2VertexCount++] = exitPoint;
     
     //step 2:
@@ -232,6 +239,15 @@ void FruitsViewController::splitPolygonSprite(PolygonSprite *sprite)
     //you destroy the old shape and create the new shapes and sprites
     if (sprite1VerticesAcceptable && sprite2VerticesAcceptable)
     {
+        b2Body *spriteBody = sprite->getBody();
+        b2Vec2 worldEntry = spriteBody->GetWorldPoint(sprite->getEntryPoint());
+        b2Vec2 worldExit = spriteBody->GetWorldPoint(sprite->getExitPoint());
+        float angle = ccpToAngle(ccpSub(ccp(worldExit.x,worldExit.y), ccp(worldEntry.x,worldEntry.y)));
+        CCPoint vector1 = ccpForAngle(angle + 1.570796);
+        CCPoint vector2 = ccpForAngle(angle - 1.570796);
+        float midX = midpoint(worldEntry.x, worldExit.x);
+        float midY = midpoint(worldEntry.y, worldExit.y);
+        
         //create the first sprite's body
         b2Body *body1 = createBodyWithPosition(sprite->getBody()->GetPosition(),
                                                sprite->getBody()->GetAngle(),
@@ -244,6 +260,8 @@ void FruitsViewController::splitPolygonSprite(PolygonSprite *sprite)
         //create the first sprite
         newSprite1 = PolygonSprite::spriteWithTexture(sprite->getTexture(), body1, false);
         addChild(newSprite1, 1);
+        newSprite1->getBody()->ApplyLinearImpulse(b2Vec2(2 * body1->GetMass() * vector1.x, 2 * body1->GetMass() * vector1.y),
+                                                  b2Vec2(midX, midY));
         
         //create the second sprite's body
         b2Body *body2 = createBodyWithPosition(sprite->getBody()->GetPosition(),
@@ -257,10 +275,15 @@ void FruitsViewController::splitPolygonSprite(PolygonSprite *sprite)
         //create the second sprite
         newSprite2 = PolygonSprite::spriteWithTexture(sprite->getTexture(), body2, false);
         addChild(newSprite2, 1);
+        newSprite2->getBody()->ApplyLinearImpulse(b2Vec2(2 * body2->GetMass() * vector2.x, 2 * body2->GetMass() * vector2.y),
+                                                  b2Vec2(midX, midY));
+        
         
         //you don't need the old shape & sprite anymore so you either destroy it or squirrel it away
         if (sprite->getOriginal())
         {
+            sprite->setState(STATE_FRUITS_IDEL);
+            
             sprite->deactivateCollisions();
             sprite->setPosition(ccp(-256,-256));   //cast them faraway
             sprite->setSliceEntered(false);
@@ -391,8 +414,8 @@ b2Body * FruitsViewController::createBodyWithPosition(b2Vec2 position, float rot
 
 void FruitsViewController::checkAndSliceObjects()
 {
-    long curTime = Machtimer::currentTimeInMS();
-    CCLOG("current time: %ld", curTime);
+    double curTime = Machtimer::currentTimeInSecond();
+    CCLOG("current time: %f", curTime);
     for (b2Body *b = m_world->GetBodyList(); b; b = b->GetNext())
     {
         if (b->GetUserData() != NULL)
@@ -422,3 +445,154 @@ void FruitsViewController::clearSlices()
         }
     }
 }
+
+void FruitsViewController::tossSprite(PolygonSprite *sprite)
+{
+    CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
+    CCPoint randomPosition = ccp(frandom_range(100, screenSize.width - 164), -64);
+    float randomAngularVelocity = frandom_range(-1, 1);
+    
+    float xModifier = 50 * (randomPosition.x - 100) / (screenSize.width = 264);
+    float min = -25.0f - xModifier;
+    float max = 75.0f - xModifier;
+    
+    float randomXVelocity = frandom_range(min, max);
+    float randomYVelocity = frandom_range(250, 300);
+    
+    sprite->setState(STATE_FRUITS_TOSSED);
+    sprite->setPosition(randomPosition);
+    sprite->activateCollisions();
+    sprite->getBody()->SetLinearVelocity(b2Vec2(randomXVelocity / PTM_RATIO, randomYVelocity / PTM_RATIO));
+    sprite->getBody()->SetAngularVelocity(randomAngularVelocity);
+}
+
+void FruitsViewController::spriteLoop()
+{
+    double curTime = Machtimer::currentTimeInSecond();
+    
+    // Checks if it’s time to toss fruits again by comparing the current time with the nextTossTime variable.
+    if (curTime > m_nextTossTime)
+    {
+        CCObject *object = NULL;
+        
+        int random = random_range(0, 4);
+        // Step 2: If there are still fruits queued to be tossed in consecutive mode,
+        // it tosses one random fruit and goes straight to step 6.
+        TYPE_FRUITS type = (TYPE_FRUITS)random;
+        if (m_currentTossType == TOSS_TYPE_CONSECUTIVE && m_queuedForToss > 0)
+        {
+            CCARRAY_FOREACH(m_fruitsView->getCache(), object)
+            {
+                PolygonSprite *sprite = (PolygonSprite *)object;
+                if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == type)
+                {
+                    tossSprite(sprite);
+                    m_queuedForToss--;
+                    break;
+                }
+            }
+        }
+        else
+        {   // step 3:Chooses either consecutive or simultaneous tossing modes, and sets the number of fruits to be tossed.
+            m_queuedForToss = random_range(3, 8);
+            int tossType = random_range(0, 1);
+            
+            m_currentTossType = (TOSS_TYPE)tossType;
+            // step 4: Tosses random fruits simultaneously. Note that the range of fruit types only goes from 0 to 4
+            // because you don’t want to include the Bomb type.
+            if (m_currentTossType == TOSS_TYPE_SIMULTANEOUS)
+            {
+                CCARRAY_FOREACH(m_fruitsView->getCache(), object)
+                {
+                    PolygonSprite *sprite = (PolygonSprite *)object;
+                    if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == type)
+                    {
+                        tossSprite(sprite);
+                        m_queuedForToss--;
+                        random = random_range(0, 4);
+                        type = (TYPE_FRUITS)random;
+                        if (m_queuedForToss == 0)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }   // step 5: Similar to step 2. It tosses the first fruit right after consecutive mode is selected and goes straight to step 6.
+            else if (m_currentTossType == TOSS_TYPE_CONSECUTIVE)
+            {
+                CCARRAY_FOREACH(m_fruitsView->getCache(), object)
+                {
+                    PolygonSprite *sprite = (PolygonSprite *)object;
+                    if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == type)
+                    {
+                        tossSprite(sprite);
+                        m_queuedForToss--;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // step 6: Sets the interval between toss times. Whenever a toss type runs out of fruit,
+        // you assign a longer interval, else, you assign short intervals because it means you are tossing fruits consecutively.
+        if (m_queuedForToss == 0)
+        {
+            m_tossInterval = frandom_range(2, 3);
+            m_nextTossTime = curTime + m_tossInterval;
+        }
+        else
+        {
+            m_tossInterval = frandom_range(0.3f, 0.8f);
+            m_nextTossTime = curTime + m_tossInterval;
+        }
+    }
+}
+
+void FruitsViewController::clearSprites()
+{
+    CCObject *object = NULL;
+    PolygonSprite *sprite = NULL;
+    
+    //we check for all tossed sprites that have dropped offscreen and reset them
+    CCARRAY_FOREACH(m_fruitsView->getCache(), object)
+    {
+        sprite = (PolygonSprite *)object;
+        CCPoint spritePosition = ccp(sprite->getBody()->GetPosition().x * PTM_RATIO,
+                                     sprite->getBody()->GetPosition().y * PTM_RATIO);
+        float yVelocity = sprite->getBody()->GetLinearVelocity().y;
+        
+        // this means the sprite has dropped offscreen.
+        if (spritePosition.y < -64 && yVelocity < 0)
+        {
+            sprite->setState(STATE_FRUITS_IDEL);
+            sprite->setSliceEntered(false);
+            sprite->setSliceExited(false);
+            sprite->setEntryPoint(b2Vec2(0.0f, 0.0f));
+            sprite->setExitPoint(b2Vec2(0.0f, 0.0f));
+            sprite->setPosition(ccp(-64, -64));
+            sprite->getBody()->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+            sprite->getBody()->SetAngularVelocity(0.0f);
+            sprite->deactivateCollisions();
+        }
+    }
+    
+    //we check for all sliced pieces that have dropped offscreen and remove them
+    CCSize screen = CCDirector::sharedDirector()->getWinSize();
+    for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext())
+    {
+        if (b->GetUserData() != NULL)
+        {
+            PolygonSprite *sprite = (PolygonSprite*)b->GetUserData();
+            CCPoint position = ccp(b->GetPosition().x*PTM_RATIO,b->GetPosition().y*PTM_RATIO);
+            if (position.x < -64 || position.x > screen.width || position.y < -64)
+            {
+                if (!sprite->getOriginal())
+                {
+                    m_world->DestroyBody(sprite->getBody());
+                    removeChild(sprite, true);
+                }
+            }
+        }
+    }
+}
+

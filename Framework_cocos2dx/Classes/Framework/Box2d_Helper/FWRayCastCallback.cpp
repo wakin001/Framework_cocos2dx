@@ -8,6 +8,7 @@
 
 #include "FWRayCastCallback.h"
 #include "Machtimer.h"
+#include "FWPolygonSprite.h"
 
 #define collinear(x1, y1, x2, y2, x3, y3)   fabsf((y1 - y2) * (x1 - x3) - (y1 - y3) * (x1 - x2))
 
@@ -23,7 +24,7 @@ FWRayCastCallback::~FWRayCastCallback()
 
 float32 FWRayCastCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction)
 {
-    PolygonSprite *polygonSprite = (PolygonSprite *)fixture->GetBody()->GetUserData();
+    FWPolygonSprite *polygonSprite = (FWPolygonSprite *)fixture->GetBody()->GetUserData();
     if (!polygonSprite->getSliceEntered())
     {
         polygonSprite->setSliceEntered(true);
@@ -31,8 +32,9 @@ float32 FWRayCastCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point
         // you need to get the point coordinates within the shape.
         polygonSprite->setEntryPoint(polygonSprite->getBody()->GetLocalPoint(point));
         
-        long currentTime = Machtimer::currentTimeInMS();
-        CCLOG("current time: %ld", currentTime);
+        double currentTime = Machtimer::currentTimeInSecond();
+        CCLOG("current time: %f", currentTime);
+        // + 1 : The avaiable time is 1 scecond, which means user should finish the split in 1 second.
         polygonSprite->setSliceEntryTime(currentTime + 1);
         CCLOG("Slice Entered at world coordinates:(%f,%f), polygon coordinates:(%f,%f)",
               point.x*PTM_RATIO,
@@ -87,8 +89,8 @@ float32 FWRayCastCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point
             if (onSameLine)
             {
                 polygonSprite->setEntryPoint(polygonSprite->getExitPoint());
-                long currentTime = Machtimer::currentTimeInMS();
-                CCLOG("current time: %ld", currentTime);
+                double currentTime = Machtimer::currentTimeInSecond();
+                CCLOG("current time: %f", currentTime);
                 polygonSprite->setSliceEntryTime(currentTime + 1);
                 polygonSprite->setSliceExited(false);
             }

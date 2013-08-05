@@ -1,16 +1,16 @@
 //
-//  PolygonSprite.cpp
+//  FWPolygonSprite.cpp
 //  Framework_cocos2dx
 //
 //  Created by ou-h on 13/07/29.
 //  Copyright 2013年 __MyCompanyName__. All rights reserved.
 //
 
-#include "PolygonSprite.h"
+#include "FWPolygonSprite.h"
 
 using namespace cocos2d;
 
-PolygonSprite::PolygonSprite()
+FWPolygonSprite::FWPolygonSprite()
 : m_sliceExited(false),
   m_sliceEntered(false),
   m_entryPoint(b2Vec2(0.0f, 0.0f)),
@@ -19,14 +19,14 @@ PolygonSprite::PolygonSprite()
 {
 }
 
-PolygonSprite::~PolygonSprite()
+FWPolygonSprite::~FWPolygonSprite()
 {
 }
 
 
-PolygonSprite * PolygonSprite::spriteWithTexture(CCTexture2D *texture, b2Body *body, bool original)
+FWPolygonSprite * FWPolygonSprite::spriteWithTexture(CCTexture2D *texture, b2Body *body, bool original)
 {
-    PolygonSprite * polygonSprite = new PolygonSprite;
+    FWPolygonSprite * polygonSprite = new FWPolygonSprite;
     if (polygonSprite == NULL || !polygonSprite->initWithTexture(texture, body, original))
     {
         CC_SAFE_DELETE(polygonSprite);
@@ -36,9 +36,9 @@ PolygonSprite * PolygonSprite::spriteWithTexture(CCTexture2D *texture, b2Body *b
     return polygonSprite;
 }
 
-PolygonSprite * PolygonSprite::spriteWithFile(const char *filename, b2Body *body, bool original)
+FWPolygonSprite * FWPolygonSprite::spriteWithFile(const char *filename, b2Body *body, bool original)
 {
-    PolygonSprite * polygonSprite = new PolygonSprite;
+    FWPolygonSprite * polygonSprite = new FWPolygonSprite;
     if (polygonSprite == NULL || !polygonSprite->initWithFile(filename, body, original))
     {
         CC_SAFE_DELETE(polygonSprite);
@@ -48,9 +48,9 @@ PolygonSprite * PolygonSprite::spriteWithFile(const char *filename, b2Body *body
     return polygonSprite;
 }
 
-PolygonSprite * PolygonSprite::spriteWithWorld(b2World *world)
+FWPolygonSprite * FWPolygonSprite::spriteWithWorld(b2World *world)
 {
-    PolygonSprite * polygonSprite = new PolygonSprite;
+    FWPolygonSprite * polygonSprite = new FWPolygonSprite;
     if (polygonSprite == NULL || !polygonSprite->initWithWorld(world))
     {
         CC_SAFE_DELETE(polygonSprite);
@@ -60,7 +60,7 @@ PolygonSprite * PolygonSprite::spriteWithWorld(b2World *world)
     return polygonSprite;
 }
 
-bool PolygonSprite::initWithTexture(CCTexture2D *texture, b2Body *body, bool original)
+bool FWPolygonSprite::initWithTexture(CCTexture2D *texture, b2Body *body, bool original)
 {
     // gather all the verticles from out Box2D shape.
     b2Fixture *originalFixture = body->GetFixtureList();
@@ -91,25 +91,25 @@ bool PolygonSprite::initWithTexture(CCTexture2D *texture, b2Body *body, bool ori
     return false;
 }
 
-bool PolygonSprite::initWithFile(const char *filename, b2Body *body, bool original)
+bool FWPolygonSprite::initWithFile(const char *filename, b2Body *body, bool original)
 {
     CCAssert(filename != NULL, "Invalide filename for sprite.");
     CCTexture2D *texture = CCTextureCache::sharedTextureCache()->addImage(filename);
     return initWithTexture(texture, body, original);
 }
 
-bool PolygonSprite::initWithWorld(b2World *world)
+bool FWPolygonSprite::initWithWorld(b2World *world)
 {
     // nothing to do here.
-    return false;
+    return true;
 }
 
 /**
  * To create a body, you need to define a body definition, a body object, a shape, 
  * and a fixture definition. No real hard values are being assigned here yet since 
- * this method will be used by subclasses of PolygonSprite later on.
+ * this method will be used by subclasses of FWPolygonSprite later on.
  */
-b2Body * PolygonSprite::createBodyForWorld(b2World *    world,
+b2Body * FWPolygonSprite::createBodyForWorld(b2World *    world,
                                            b2Vec2       position,
                                            float        rotation,
                                            b2Vec2 *     vertices,
@@ -130,6 +130,8 @@ b2Body * PolygonSprite::createBodyForWorld(b2World *    world,
     fixtureDef.restitution = restitution;
     fixtureDef.filter.categoryBits = 0;
     fixtureDef.filter.maskBits = 0;
+    // If isSensor is true, only check the collision but not make the collision available.
+    fixtureDef.isSensor = true;
     
     b2PolygonShape shape;
     shape.Set(vertices, vertexCount);
@@ -145,7 +147,7 @@ b2Body * PolygonSprite::createBodyForWorld(b2World *    world,
  * collision between those two objects. You set these to 0 first because you don’t want any 
  * collisions happening when the objects are first initialized.
  */
-void PolygonSprite::activateCollisions()
+void FWPolygonSprite::activateCollisions()
 {
     b2Fixture *fixture = m_body->GetFixtureList();
     b2Filter filter = fixture->GetFilterData();
@@ -153,7 +155,7 @@ void PolygonSprite::activateCollisions()
     filter.maskBits = 0x0001;
     fixture->SetFilterData(filter);
 }
-void PolygonSprite::deactivateCollisions()
+void FWPolygonSprite::deactivateCollisions()
 {
     b2Fixture *fixture = m_body->GetFixtureList();
     b2Filter filter = fixture->GetFilterData();
@@ -162,7 +164,7 @@ void PolygonSprite::deactivateCollisions()
     fixture->SetFilterData(filter);
 }
 
-void PolygonSprite::setPosition(const CCPoint &position)
+void FWPolygonSprite::setPosition(const CCPoint &position)
 {
     PRFilledPolygon::setPosition(position);
     m_body->SetTransform(b2Vec2(position.x / PTM_RATIO, position.y / PTM_RATIO), m_body->GetAngle());
@@ -171,7 +173,7 @@ void PolygonSprite::setPosition(const CCPoint &position)
 /**
  * All this does is to make sure that our Box2D shape and our sprite are in the same position when moving.
  */
-CCAffineTransform PolygonSprite::nodeToParentTransform(void)
+CCAffineTransform FWPolygonSprite::nodeToParentTransform(void)
 {
     b2Vec2 pos  = m_body->GetPosition();
     

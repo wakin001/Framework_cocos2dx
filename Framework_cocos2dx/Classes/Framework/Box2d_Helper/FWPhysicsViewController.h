@@ -21,13 +21,15 @@ public:
     
     ~FWPhysicsViewController();
     
+    bool                        init(FWAbstractModel * model);
+    
     void                        initPhysics();
     virtual void                draw();
     virtual void                update(float delta);
     
 protected:
-    b2World                     *m_world;
-    cocos2d::extension::GLESDebugDraw    *m_debugDraw;
+    b2World                             *m_world;
+    cocos2d::extension::GLESDebugDraw   *m_debugDraw;
     
 };
 

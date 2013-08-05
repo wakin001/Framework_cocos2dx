@@ -7,7 +7,7 @@
 //
 
 #include "FruitsView.h"
-#include "Watermelon.h"
+#include "PolygonSprite.h"
 
 using namespace cocos2d;
 
@@ -35,11 +35,51 @@ bool FruitsView::init(FruitsModel *model, FWAbstractViewDelegate *delegate)
 
 void FruitsView::initSprites(b2World *world)
 {
+    // Create fruits. (out of screen at first.)
     m_cache = CCArray::createWithCapacity(53);
+    m_cache->retain();
     
-    // Just create one sprite for now. This whole method will be replaced later.
-    PolygonSprite *sprite = Watermelon::spriteWithWorld(world);
-    addChild(sprite, 1);
-    sprite->activateCollisions();
-    m_cache->addObject(sprite);
+    for (int i = 0; i < 10; i++)
+    {
+        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_WATERMELON, "watermelon");
+        sprite->setPosition(ccp(-64*(i+1),-64));
+        addChild(sprite, 1);
+        m_cache->addObject(sprite);
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_STRAWBERRY, "strawberry");
+        sprite->setPosition(ccp(-64*(i+1),-64));
+        addChild(sprite, 1);
+        m_cache->addObject(sprite);
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_PINEAPPLE, "pineapple");
+        sprite->setPosition(ccp(-64*(i+1),-64));
+        addChild(sprite, 1);
+        m_cache->addObject(sprite);
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_GRAPES, "grapes");
+        sprite->setPosition(ccp(-64*(i+1),-64));
+        addChild(sprite, 1);
+        m_cache->addObject(sprite);
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_BANANA, "banana");
+        sprite->setPosition(ccp(-64*(i+1),-64));
+        addChild(sprite, 1);
+        m_cache->addObject(sprite);
+    }
+    
+    for (int i = 0; i < 3; i++)
+    {
+        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_BOMN, "bomb");
+        sprite->setPosition(ccp(-64*(i+1),-64));
+        addChild(sprite, 1);
+        m_cache->addObject(sprite);
+    }
 }
