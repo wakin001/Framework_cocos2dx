@@ -29,14 +29,14 @@
 		731D670A17A6618D005998CE /* PRFilledPolygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670417A6618D005998CE /* PRFilledPolygon.cpp */; };
 		731D670B17A6618D005998CE /* PRRatcliffTriangulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670617A6618D005998CE /* PRRatcliffTriangulator.cpp */; };
 		731D670C17A6618D005998CE /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670817A6618D005998CE /* triangulate.cpp */; };
-		731D671017A663E0005998CE /* PolygonSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670E17A663E0005998CE /* PolygonSprite.cpp */; };
+		731D671017A663E0005998CE /* FWPolygonSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670E17A663E0005998CE /* FWPolygonSprite.cpp */; };
 		7320501C17742606006BDE45 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7320501B17742606006BDE45 /* Default-568h@2x.png */; };
 		7320AE6B1772D933008EF0FF /* FWGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7320AE691772D932008EF0FF /* FWGame.cpp */; };
 		7320AE6E1772DB23008EF0FF /* FWDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7320AE6C1772DB23008EF0FF /* FWDevice.cpp */; };
-		7335E12B17A763000085F039 /* Watermelon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7335E12917A763000085F039 /* Watermelon.cpp */; };
 		7335E12E17A7B7C80085F039 /* FWPhysicsViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7335E12C17A7B7C80085F039 /* FWPhysicsViewController.cpp */; };
 		7335E13417A7BF7F0085F039 /* FWRayCastCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7335E13217A7BF7F0085F039 /* FWRayCastCallback.cpp */; };
 		7335E13717A7C4320085F039 /* Machtimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7335E13517A7C4320085F039 /* Machtimer.cpp */; };
+		73464CC317AF8AEB00E8C542 /* PolygonSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73464CC117AF8AEA00E8C542 /* PolygonSprite.cpp */; };
 		73881FEC17704EBF00B45AF6 /* FWActionBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FC517704EBF00B45AF6 /* FWActionBase.cpp */; };
 		73881FED17704EBF00B45AF6 /* FWActionEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FC717704EBF00B45AF6 /* FWActionEffect.cpp */; };
 		73881FEE17704EBF00B45AF6 /* FWAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73881FC917704EBF00B45AF6 /* FWAnimation.cpp */; };
@@ -415,21 +415,21 @@
 		731D670717A6618D005998CE /* PRRatcliffTriangulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PRRatcliffTriangulator.h; sourceTree = "<group>"; };
 		731D670817A6618D005998CE /* triangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulate.cpp; sourceTree = "<group>"; };
 		731D670917A6618D005998CE /* triangulate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulate.h; sourceTree = "<group>"; };
-		731D670E17A663E0005998CE /* PolygonSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonSprite.cpp; path = Box2d_Helper/PolygonSprite.cpp; sourceTree = "<group>"; };
-		731D670F17A663E0005998CE /* PolygonSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PolygonSprite.h; path = Box2d_Helper/PolygonSprite.h; sourceTree = "<group>"; };
+		731D670E17A663E0005998CE /* FWPolygonSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FWPolygonSprite.cpp; path = Box2d_Helper/FWPolygonSprite.cpp; sourceTree = "<group>"; };
+		731D670F17A663E0005998CE /* FWPolygonSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWPolygonSprite.h; path = Box2d_Helper/FWPolygonSprite.h; sourceTree = "<group>"; };
 		7320501B17742606006BDE45 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 		7320AE691772D932008EF0FF /* FWGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWGame.cpp; sourceTree = "<group>"; };
 		7320AE6A1772D932008EF0FF /* FWGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWGame.h; sourceTree = "<group>"; };
 		7320AE6C1772DB23008EF0FF /* FWDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWDevice.cpp; sourceTree = "<group>"; };
 		7320AE6D1772DB23008EF0FF /* FWDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWDevice.h; sourceTree = "<group>"; };
-		7335E12917A763000085F039 /* Watermelon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Watermelon.cpp; path = Fruits/Watermelon.cpp; sourceTree = "<group>"; };
-		7335E12A17A763000085F039 /* Watermelon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Watermelon.h; path = Fruits/Watermelon.h; sourceTree = "<group>"; };
 		7335E12C17A7B7C80085F039 /* FWPhysicsViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FWPhysicsViewController.cpp; path = Box2d_Helper/FWPhysicsViewController.cpp; sourceTree = "<group>"; };
 		7335E12D17A7B7C80085F039 /* FWPhysicsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWPhysicsViewController.h; path = Box2d_Helper/FWPhysicsViewController.h; sourceTree = "<group>"; };
 		7335E13217A7BF7F0085F039 /* FWRayCastCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FWRayCastCallback.cpp; path = Box2d_Helper/FWRayCastCallback.cpp; sourceTree = "<group>"; };
 		7335E13317A7BF7F0085F039 /* FWRayCastCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWRayCastCallback.h; path = Box2d_Helper/FWRayCastCallback.h; sourceTree = "<group>"; };
 		7335E13517A7C4320085F039 /* Machtimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Machtimer.cpp; sourceTree = "<group>"; };
 		7335E13617A7C4320085F039 /* Machtimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Machtimer.h; sourceTree = "<group>"; };
+		73464CC117AF8AEA00E8C542 /* PolygonSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonSprite.cpp; path = Fruits/PolygonSprite.cpp; sourceTree = "<group>"; };
+		73464CC217AF8AEB00E8C542 /* PolygonSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PolygonSprite.h; path = Fruits/PolygonSprite.h; sourceTree = "<group>"; };
 		73881FC517704EBF00B45AF6 /* FWActionBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWActionBase.cpp; sourceTree = "<group>"; };
 		73881FC617704EBF00B45AF6 /* FWActionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWActionBase.h; sourceTree = "<group>"; };
 		73881FC717704EBF00B45AF6 /* FWActionEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWActionEffect.cpp; sourceTree = "<group>"; };
@@ -1225,8 +1225,8 @@
 		731D670D17A66397005998CE /* Box2d_Helper */ = {
 			isa = PBXGroup;
 			children = (
-				731D670E17A663E0005998CE /* PolygonSprite.cpp */,
-				731D670F17A663E0005998CE /* PolygonSprite.h */,
+				731D670E17A663E0005998CE /* FWPolygonSprite.cpp */,
+				731D670F17A663E0005998CE /* FWPolygonSprite.h */,
 				7335E12C17A7B7C80085F039 /* FWPhysicsViewController.cpp */,
 				7335E12D17A7B7C80085F039 /* FWPhysicsViewController.h */,
 				7335E13217A7BF7F0085F039 /* FWRayCastCallback.cpp */,
@@ -1370,8 +1370,8 @@
 				7392CCCC17A6871900E04362 /* FruitsModel.h */,
 				7392CCCE17A6873000E04362 /* FruitsViewController.cpp */,
 				7392CCCF17A6873000E04362 /* FruitsViewController.h */,
-				7335E12917A763000085F039 /* Watermelon.cpp */,
-				7335E12A17A763000085F039 /* Watermelon.h */,
+				73464CC117AF8AEA00E8C542 /* PolygonSprite.cpp */,
+				73464CC217AF8AEB00E8C542 /* PolygonSprite.h */,
 			);
 			name = Fruits;
 			sourceTree = "<group>";
@@ -3128,14 +3128,14 @@
 				731D670A17A6618D005998CE /* PRFilledPolygon.cpp in Sources */,
 				731D670B17A6618D005998CE /* PRRatcliffTriangulator.cpp in Sources */,
 				731D670C17A6618D005998CE /* triangulate.cpp in Sources */,
-				731D671017A663E0005998CE /* PolygonSprite.cpp in Sources */,
+				731D671017A663E0005998CE /* FWPolygonSprite.cpp in Sources */,
 				7392CCCA17A6870000E04362 /* FruitsView.cpp in Sources */,
 				7392CCCD17A6871900E04362 /* FruitsModel.cpp in Sources */,
 				7392CCD017A6873000E04362 /* FruitsViewController.cpp in Sources */,
-				7335E12B17A763000085F039 /* Watermelon.cpp in Sources */,
 				7335E12E17A7B7C80085F039 /* FWPhysicsViewController.cpp in Sources */,
 				7335E13417A7BF7F0085F039 /* FWRayCastCallback.cpp in Sources */,
 				7335E13717A7C4320085F039 /* Machtimer.cpp in Sources */,
+				73464CC317AF8AEB00E8C542 /* PolygonSprite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
