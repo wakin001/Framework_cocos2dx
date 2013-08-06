@@ -7,11 +7,10 @@
 //
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+#include "FWBox2dHelper.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
-
-#define PTM_RATIO 32
 
 enum {
     kTagParentNode = 1,
@@ -41,8 +40,8 @@ CCAffineTransform PhysicsSprite::nodeToParentTransform(void)
 {
     b2Vec2 pos  = m_pBody->GetPosition();
 
-    float x = pos.x * PTM_RATIO;
-    float y = pos.y * PTM_RATIO;
+    float x = pos.x * FWBox2dHelper::pixelsToMeterRatio();
+    float y = pos.y * FWBox2dHelper::pixelsToMeterRatio();
 
     if ( isIgnoreAnchorPointForPosition() ) {
         x += m_obAnchorPointInPoints.x;
@@ -114,7 +113,7 @@ void HelloWorld::initPhysics()
 
     world->SetContinuousPhysics(true);
 
-     m_debugDraw = new extension::GLESDebugDraw( PTM_RATIO );
+     m_debugDraw = new extension::GLESDebugDraw( FWBox2dHelper::pixelsToMeterRatio() );
      world->SetDebugDraw(m_debugDraw);
 
     uint32 flags = 0;
@@ -140,19 +139,19 @@ void HelloWorld::initPhysics()
 
     // bottom
 
-    groundBox.Set(b2Vec2(0,0), b2Vec2(s.width/PTM_RATIO,0));
+    groundBox.Set(b2Vec2(0,0), b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),0));
     groundBody->CreateFixture(&groundBox,0);
 
     // top
-    groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO));
+    groundBox.Set(b2Vec2(0,s.height/FWBox2dHelper::pixelsToMeterRatio()), b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),s.height/FWBox2dHelper::pixelsToMeterRatio()));
     groundBody->CreateFixture(&groundBox,0);
 
     // left
-    groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(0,0));
+    groundBox.Set(b2Vec2(0,s.height/FWBox2dHelper::pixelsToMeterRatio()), b2Vec2(0,0));
     groundBody->CreateFixture(&groundBox,0);
 
     // right
-    groundBox.Set(b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,0));
+    groundBox.Set(b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),s.height/FWBox2dHelper::pixelsToMeterRatio()), b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),0));
     groundBody->CreateFixture(&groundBox,0);
 }
 
@@ -195,7 +194,7 @@ void HelloWorld::addNewSpriteAtPosition(CCPoint p)
     //Set up a 1m squared box in the physics world
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
+    bodyDef.position.Set(p.x/FWBox2dHelper::pixelsToMeterRatio(), p.y/FWBox2dHelper::pixelsToMeterRatio());
     
     b2Body *body = world->CreateBody(&bodyDef);
     
@@ -234,7 +233,7 @@ void HelloWorld::update(float dt)
         if (b->GetUserData() != NULL) {
             //Synchronize the AtlasSprites position and rotation with the corresponding body
             CCSprite* myActor = (CCSprite*)b->GetUserData();
-            myActor->setPosition( CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO) );
+            myActor->setPosition( CCPointMake( b->GetPosition().x * FWBox2dHelper::pixelsToMeterRatio(), b->GetPosition().y * FWBox2dHelper::pixelsToMeterRatio()) );
             myActor->setRotation( -1 * CC_RADIANS_TO_DEGREES(b->GetAngle()) );
         }    
     }

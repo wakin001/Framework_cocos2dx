@@ -44,12 +44,14 @@ void FWGame::setupScreenResolution()
     
     // Set
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)     // iOS platform
-        
+    
+    searchPaths.push_back("Published-iOS"); // Resources/Published-iOS
+    
     if (m_device->isIPhoneRetina())
     {
         //3.5-inch
         resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
-        
+        resDirOrders.push_back("resources-iphone");
         
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
@@ -69,10 +71,12 @@ void FWGame::setupScreenResolution()
     else if (m_device->isIPhone())
     {
         resDirOrders.push_back("resources-iphone");  //Resources/Published-iOS/resources-iphone
+        resDirOrders.push_back("resources-iphonehd");
         
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                                kResolutionShowAll);
+        
     }
 
 #else        // Other plateform. (Android...)

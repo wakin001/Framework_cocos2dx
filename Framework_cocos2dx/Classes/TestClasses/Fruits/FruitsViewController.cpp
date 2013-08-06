@@ -57,10 +57,25 @@ bool FruitsViewController::init(FruitsModel * model)
     m_fruitsView = dynamic_cast<FruitsView *>(m_view);
     m_fruitsView->initSprites(m_world);
     
+    initHUD();
+    
     m_raycastCallback = new FWRayCastCallback();
     
     m_nextTossTime = Machtimer::currentTimeInSecond() + 1;
     m_queuedForToss = 0;
+    
+    // preload sound.
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("swoosh.caf");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("squash.caf");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("toss_consecutive.caf");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("toss_simultaneous.caf");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("toss_bomb.caf");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect("lose_life.caf");
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("nature_bgm.aifc");
+
+    m_timeCurrent = 0;
+    m_timePrevious = 0;
+    m_swooshEffectId = -1;
     
     scheduleUpdate();
     
@@ -83,6 +98,8 @@ void FruitsViewController::draw()
 void FruitsViewController::update(float delta)
 {
     FWPhysicsViewController::update(delta);
+ 
+    m_timeCurrent += delta;
     
     checkAndSliceObjects();
     clearSprites();
@@ -93,6 +110,8 @@ void FruitsViewController::update(float delta)
 bool FruitsViewController::touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent)
 {
     m_startPoint = point;
+    m_fruitsView->getBladeSparkle()->setPosition(point);
+    m_fruitsView->getBladeSparkle()->resetSystem();
     return true;
 }
 
@@ -106,18 +125,93 @@ void FruitsViewController::touchesMoveWithPoint(cocos2d::CCPoint point, cocos2d:
         // and will only intersect each fixture once. To get around this, you cast one ray from the
         // start point to the end point and one from the end point to the start point.
         m_world->RayCast(m_raycastCallback,
-                         b2Vec2(m_startPoint.x / PTM_RATIO, m_startPoint.y / PTM_RATIO),
-                         b2Vec2(m_endPoint.x / PTM_RATIO, m_endPoint.y / PTM_RATIO));
+                         b2Vec2(m_startPoint.x / FWBox2dHelper::pixelsToMeterRatio(), m_startPoint.y / FWBox2dHelper::pixelsToMeterRatio()),
+                         b2Vec2(m_endPoint.x / FWBox2dHelper::pixelsToMeterRatio(), m_endPoint.y / FWBox2dHelper::pixelsToMeterRatio()));
         m_world->RayCast(m_raycastCallback,
-                         b2Vec2(m_endPoint.x / PTM_RATIO, m_endPoint.y / PTM_RATIO),
-                         b2Vec2(m_startPoint.x / PTM_RATIO, m_startPoint.y / PTM_RATIO));
+                         b2Vec2(m_endPoint.x / FWBox2dHelper::pixelsToMeterRatio(), m_endPoint.y / FWBox2dHelper::pixelsToMeterRatio()),
+                         b2Vec2(m_startPoint.x / FWBox2dHelper::pixelsToMeterRatio(), m_startPoint.y / FWBox2dHelper::pixelsToMeterRatio()));
         m_startPoint = m_endPoint;
+    }
+    
+    float deltaTime = m_timeCurrent - m_timePrevious;
+    m_timePrevious = m_timeCurrent;
+    CCPoint oldPosition = m_fruitsView->getBladeSparkle()->getPosition();
+    
+    m_fruitsView->getBladeSparkle()->setPosition(point);
+    
+    if (ccpDistance(m_fruitsView->getBladeSparkle()->getPosition(), oldPosition) / deltaTime > 1000)
+    {
+        if (m_swooshEffectId == -1) // not playing.
+        {
+            m_swooshEffectId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("swoosh.caf");
+        }
     }
 }
 
 void FruitsViewController::touchesEndWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent)
 {
     clearSlices();
+    m_fruitsView->getBladeSparkle()->stopSystem();
+}
+
+void FruitsViewController::initHUD()
+{
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    
+    m_cuts = 0;
+    m_lives = 3;
+    
+    for (int i = 0; i < 3; ++i)
+    {
+        CCSprite *cross = CCSprite::create("x_unfilled.png");
+        cross->setPosition(ccp(winSize.width - cross->getContentSize().width / 2 - i * cross->getContentSize().width,
+                               winSize.height - cross->getContentSize().height / 2));
+        addChild(cross, 4);
+    }
+    
+    CCSprite *cutsIcon = CCSprite::create("fruit_cut.png");
+    cutsIcon->setPosition(ccp(cutsIcon->getContentSize().width / 2, winSize.height - cutsIcon->getContentSize().height / 2));
+    addChild(cutsIcon);
+    
+    m_cutsLabel = CCLabelTTF::create("0", "Helvetica Neue", 30);
+    m_cutsLabel->setAnchorPoint(ccp(0.0f, 0.5f));
+    m_cutsLabel->setPosition(ccp(cutsIcon->getPosition().x + cutsIcon->getContentSize().width / 2 + m_cutsLabel->getContentSize().width / 2,
+                                 cutsIcon->getPosition().y));
+    addChild(m_cutsLabel, 4);
+}
+
+void FruitsViewController::restart()
+{
+    replaceScene(FruitsViewController::create());
+}
+
+void FruitsViewController::endGame()
+{
+    unscheduleUpdate();
+    
+    CCMenuItemLabel *label = CCMenuItemLabel::create(CCLabelTTF::create("RESTART", "Helvetica Nenu", 50),
+                                                     this,
+                                                     menu_selector(FruitsViewController::restart));
+    CCMenu *menu = CCMenu::create(label, NULL);
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    menu->setPosition(winSize.width / 2, winSize.height / 2);
+    addChild(menu, 4);
+}
+
+void FruitsViewController::subtractLife()
+{
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("lose_life.caf");
+    CCSize screen = CCDirector::sharedDirector()->getWinSize();
+    m_lives--;
+    CCSprite *lostLife = CCSprite::create("x_filled.png");
+    lostLife->setPosition(ccp(screen.width - lostLife->getContentSize().width/2 - m_lives*lostLife->getContentSize().width,
+                              screen.height - lostLife->getContentSize().height/2));
+    addChild(lostLife, 4);
+    
+    if (m_lives <= 0)
+    {
+        endGame();
+    }
 }
 
 b2Vec2 * FruitsViewController::arrangeVertices(b2Vec2 *vertices, int count)
@@ -239,6 +333,12 @@ void FruitsViewController::splitPolygonSprite(PolygonSprite *sprite)
     //you destroy the old shape and create the new shapes and sprites
     if (sprite1VerticesAcceptable && sprite2VerticesAcceptable)
     {
+        // Add cut count.
+        m_cuts++;
+        char charCuts[10];
+        sprintf(charCuts, "%d", m_cuts);
+        m_cutsLabel->setString(charCuts);
+        
         b2Body *spriteBody = sprite->getBody();
         b2Vec2 worldEntry = spriteBody->GetWorldPoint(sprite->getEntryPoint());
         b2Vec2 worldExit = spriteBody->GetWorldPoint(sprite->getExitPoint());
@@ -282,19 +382,37 @@ void FruitsViewController::splitPolygonSprite(PolygonSprite *sprite)
         //you don't need the old shape & sprite anymore so you either destroy it or squirrel it away
         if (sprite->getOriginal())
         {
-            sprite->setState(STATE_FRUITS_IDEL);
+            // Do particele effect.
+            b2Vec2 convertedWorldEntry = b2Vec2(worldEntry.x * FWBox2dHelper::pixelsToMeterRatio(), worldEntry.y * FWBox2dHelper::pixelsToMeterRatio());
+            b2Vec2 convertedWorldExit = b2Vec2(worldExit.x * FWBox2dHelper::pixelsToMeterRatio(), worldExit.y * FWBox2dHelper::pixelsToMeterRatio());
+            float midX = midpoint(convertedWorldEntry.x, convertedWorldExit.x);
+            float midY = midpoint(convertedWorldEntry.y, convertedWorldExit.y);
+            sprite->getSplurt()->setPosition(ccp(midX,midY));
+            sprite->getSplurt()->resetSystem();
             
-            sprite->deactivateCollisions();
-            sprite->setPosition(ccp(-256,-256));   //cast them faraway
-            sprite->setSliceEntered(false);
-            sprite->setSliceExited(false);
-            sprite->setEntryPoint(b2Vec2(0.0f, 0.0f));
-            sprite->setExitPoint(b2Vec2(0.0f, 0.0f));
+            if (sprite->getType() == TYPE_FRUITS_BOMN)
+            {
+                subtractLife();
+                CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("explosion.caf");
+            }
+            else
+            {
+                sprite->setState(STATE_FRUITS_IDEL);
+                
+                sprite->deactivateCollisions();
+                sprite->setPosition(ccp(-256,-256));   //cast them faraway
+                sprite->setSliceEntered(false);
+                sprite->setSliceExited(false);
+                sprite->setEntryPoint(b2Vec2(0.0f, 0.0f));
+                sprite->setExitPoint(b2Vec2(0.0f, 0.0f));
+                CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("squash.caf");
+            }
         }
         else
         {
             m_world->DestroyBody(sprite->getBody());
             removeChild(sprite, true);
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("smallcut.caf");
         }
     }
     else
@@ -415,7 +533,6 @@ b2Body * FruitsViewController::createBodyWithPosition(b2Vec2 position, float rot
 void FruitsViewController::checkAndSliceObjects()
 {
     double curTime = Machtimer::currentTimeInSecond();
-    CCLOG("current time: %f", curTime);
     for (b2Body *b = m_world->GetBodyList(); b; b = b->GetNext())
     {
         if (b->GetUserData() != NULL)
@@ -462,7 +579,7 @@ void FruitsViewController::tossSprite(PolygonSprite *sprite)
     sprite->setState(STATE_FRUITS_TOSSED);
     sprite->setPosition(randomPosition);
     sprite->activateCollisions();
-    sprite->getBody()->SetLinearVelocity(b2Vec2(randomXVelocity / PTM_RATIO, randomYVelocity / PTM_RATIO));
+    sprite->getBody()->SetLinearVelocity(b2Vec2(randomXVelocity / FWBox2dHelper::pixelsToMeterRatio(), randomYVelocity / FWBox2dHelper::pixelsToMeterRatio()));
     sprite->getBody()->SetAngularVelocity(randomAngularVelocity);
 }
 
@@ -474,6 +591,21 @@ void FruitsViewController::spriteLoop()
     if (curTime > m_nextTossTime)
     {
         CCObject *object = NULL;
+        
+        int chance = random_range(0, 8);
+        if (chance == 0)
+        {
+            CCARRAY_FOREACH(m_fruitsView->getCache(), object)
+            {
+                PolygonSprite *sprite = (PolygonSprite *)object;
+                if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == TYPE_FRUITS_BOMN)
+                {
+                    tossSprite(sprite);
+                    CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("toss_bomb.caf");
+                    break;
+                }
+            }
+        }
         
         int random = random_range(0, 4);
         // Step 2: If there are still fruits queued to be tossed in consecutive mode,
@@ -487,6 +619,7 @@ void FruitsViewController::spriteLoop()
                 if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == type)
                 {
                     tossSprite(sprite);
+                    CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("toss_consecutive.caf");
                     m_queuedForToss--;
                     break;
                 }
@@ -508,6 +641,7 @@ void FruitsViewController::spriteLoop()
                     if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == type)
                     {
                         tossSprite(sprite);
+                        CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("toss_simultaneous.caf");
                         m_queuedForToss--;
                         random = random_range(0, 4);
                         type = (TYPE_FRUITS)random;
@@ -526,6 +660,7 @@ void FruitsViewController::spriteLoop()
                     if (sprite->getState() == STATE_FRUITS_IDEL && sprite->getType() == type)
                     {
                         tossSprite(sprite);
+                        CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("toss_consecutive.caf");
                         m_queuedForToss--;
                         break;
                     }
@@ -537,12 +672,12 @@ void FruitsViewController::spriteLoop()
         // you assign a longer interval, else, you assign short intervals because it means you are tossing fruits consecutively.
         if (m_queuedForToss == 0)
         {
-            m_tossInterval = frandom_range(2, 3);
+            m_tossInterval = frandom_range(1, 2);
             m_nextTossTime = curTime + m_tossInterval;
         }
         else
         {
-            m_tossInterval = frandom_range(0.3f, 0.8f);
+            m_tossInterval = frandom_range(0.2f, 0.6f);
             m_nextTossTime = curTime + m_tossInterval;
         }
     }
@@ -557,13 +692,18 @@ void FruitsViewController::clearSprites()
     CCARRAY_FOREACH(m_fruitsView->getCache(), object)
     {
         sprite = (PolygonSprite *)object;
-        CCPoint spritePosition = ccp(sprite->getBody()->GetPosition().x * PTM_RATIO,
-                                     sprite->getBody()->GetPosition().y * PTM_RATIO);
+        CCPoint spritePosition = ccp(sprite->getBody()->GetPosition().x * FWBox2dHelper::pixelsToMeterRatio(),
+                                     sprite->getBody()->GetPosition().y * FWBox2dHelper::pixelsToMeterRatio());
         float yVelocity = sprite->getBody()->GetLinearVelocity().y;
         
         // this means the sprite has dropped offscreen.
         if (spritePosition.y < -64 && yVelocity < 0)
         {
+            if (sprite->getState() == STATE_FRUITS_TOSSED && sprite->getType() != TYPE_FRUITS_BOMN)
+            {
+                subtractLife();
+            }
+            
             sprite->setState(STATE_FRUITS_IDEL);
             sprite->setSliceEntered(false);
             sprite->setSliceExited(false);
@@ -573,6 +713,8 @@ void FruitsViewController::clearSprites()
             sprite->getBody()->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
             sprite->getBody()->SetAngularVelocity(0.0f);
             sprite->deactivateCollisions();
+            
+            
         }
     }
     
@@ -583,7 +725,7 @@ void FruitsViewController::clearSprites()
         if (b->GetUserData() != NULL)
         {
             PolygonSprite *sprite = (PolygonSprite*)b->GetUserData();
-            CCPoint position = ccp(b->GetPosition().x*PTM_RATIO,b->GetPosition().y*PTM_RATIO);
+            CCPoint position = ccp(b->GetPosition().x*FWBox2dHelper::pixelsToMeterRatio(),b->GetPosition().y*FWBox2dHelper::pixelsToMeterRatio());
             if (position.x < -64 || position.x > screen.width || position.y < -64)
             {
                 if (!sprite->getOriginal())

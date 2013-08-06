@@ -29,8 +29,11 @@ public:
     
     void                            initSprites(b2World *world);
     
+    void                            initBackground();
+    
 public:
     CC_SYNTHESIZE(cocos2d::CCArray *,   m_cache,        Cache);
+    CC_SYNTHESIZE(cocos2d::CCParticleSystemQuad *, m_bladeSparkle, BladeSparkle);
     
 protected:
     

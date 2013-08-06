@@ -104,14 +104,14 @@ bool PolygonSprite::initWithWorld(b2World *world, TYPE_FRUITS type, const char *
     {
         CCString *value = (CCString *)polygonData->objectAtIndex(i);
         CCPoint point = CCPointFromString(value->getCString());
-        vertices.push_back(b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO));
+        vertices.push_back(b2Vec2(point.x / FWBox2dHelper::pixelsToMeterRatio(), point.y / FWBox2dHelper::pixelsToMeterRatio()));
     }
     
     // Create body
     CCSize screenSize = CCDirector::sharedDirector()->getWinSize();
     
     b2Body *body = createBodyForWorld(world,
-                                      b2Vec2(screenSize.width * 0.5f / PTM_RATIO, screenSize.height * 0.5f / PTM_RATIO),
+                                      b2Vec2(screenSize.width * 0.5f / FWBox2dHelper::pixelsToMeterRatio(), screenSize.height * 0.5f / FWBox2dHelper::pixelsToMeterRatio()),
                                       0,
                                       &vertices[0],
                                       count,
@@ -127,6 +127,11 @@ bool PolygonSprite::initWithWorld(b2World *world, TYPE_FRUITS type, const char *
     
     // Set fruits type.
     setType(type);
+    
+    // init particle system.
+    std::string particleFileName = std::string(physicPlistFile) + std::string("_splurt.plist");
+    m_splurt = CCParticleSystemQuad::create(particleFileName.c_str());
+    m_splurt->stopSystem();
     
     return true;
 }

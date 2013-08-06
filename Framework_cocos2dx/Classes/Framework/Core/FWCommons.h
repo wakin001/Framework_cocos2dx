@@ -10,7 +10,7 @@
 #define __FWCommons__OBJECT_H__
 
 #include "cocos2d.h"
-
+#include "FWBox2dHelper.h"
 
 /**
  * Check device is ipad or iphone.
@@ -28,10 +28,6 @@
 #define FWD_SAFE_RELEASE(x)                         [x release]
 #else
 #define FWD_SAFE_RELEASE(x)                         [x release], x = nil
-#endif
-
-#ifndef PTM_RATIO
-#define PTM_RATIO 32
 #endif
 
 /**

@@ -35,7 +35,7 @@ bool FWPhysicsViewController::init(FWAbstractModel * model)
 
 void FWPhysicsViewController::initPhysics()
 {
-    CCSize s = CCDirector::sharedDirector()->getWinSize();
+//    CCSize s = CCDirector::sharedDirector()->getWinSize();
     
     b2Vec2 gravity;
 //    gravity.Set(0.0f, -10.0f);
@@ -47,7 +47,7 @@ void FWPhysicsViewController::initPhysics()
     
     m_world->SetContinuousPhysics(true);
     
-    m_debugDraw = new extension::GLESDebugDraw( PTM_RATIO );
+    m_debugDraw = new extension::GLESDebugDraw( FWBox2dHelper::pixelsToMeterRatio() );
     m_world->SetDebugDraw(m_debugDraw);
     
     uint32 flags = 0;
@@ -73,19 +73,19 @@ void FWPhysicsViewController::initPhysics()
     
     // bottom
     
-//    groundBox.Set(b2Vec2(0,0), b2Vec2(s.width/PTM_RATIO,0));
+//    groundBox.Set(b2Vec2(0,0), b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),0));
 //    groundBody->CreateFixture(&groundBox,0);
 //    
 //    // top
-//    groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO));
+//    groundBox.Set(b2Vec2(0,s.height/FWBox2dHelper::pixelsToMeterRatio()), b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),s.height/FWBox2dHelper::pixelsToMeterRatio()));
 //    groundBody->CreateFixture(&groundBox,0);
 //    
 //    // left
-//    groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(0,0));
+//    groundBox.Set(b2Vec2(0,s.height/FWBox2dHelper::pixelsToMeterRatio()), b2Vec2(0,0));
 //    groundBody->CreateFixture(&groundBox,0);
 //    
 //    // right
-//    groundBox.Set(b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,0));
+//    groundBox.Set(b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),s.height/FWBox2dHelper::pixelsToMeterRatio()), b2Vec2(s.width/FWBox2dHelper::pixelsToMeterRatio(),0));
 //    groundBody->CreateFixture(&groundBox,0);
 }
 
@@ -127,7 +127,7 @@ void FWPhysicsViewController::update(float dt)
         if (b->GetUserData() != NULL) {
             //Synchronize the AtlasSprites position and rotation with the corresponding body
             CCSprite* myActor = (CCSprite*)b->GetUserData();
-            myActor->setPosition( CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO) );
+            myActor->setPosition( CCPointMake( b->GetPosition().x * FWBox2dHelper::pixelsToMeterRatio(), b->GetPosition().y * FWBox2dHelper::pixelsToMeterRatio()) );
             myActor->setRotation( -1 * CC_RADIANS_TO_DEGREES(b->GetAngle()) );
         }
     }

@@ -30,6 +30,7 @@ typedef enum
 #include "FWPhysicsViewController.h"
 #include "FWRayCastCallback.h"
 #include "PolygonSprite.h"
+#include "SimpleAudioEngine.h"
 
 class FruitsViewController : public FWPhysicsViewController
 {
@@ -49,6 +50,11 @@ public:
     virtual bool                touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
     virtual void                touchesMoveWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
     virtual void                touchesEndWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
+    
+    void                        initHUD();
+    void                        restart();
+    void                        endGame();
+    void                        subtractLife();
     
     b2Vec2 *                    arrangeVertices(b2Vec2 *vertices, int count);
     void                        splitPolygonSprite(PolygonSprite *sprite);
@@ -78,6 +84,15 @@ protected:
     int                         m_queuedForToss;
     // The toss type of the current toss interval. It is a random choice between simultaneous and consecutive.
     TOSS_TYPE                   m_currentTossType;
+    
+    int                         m_cuts;
+    int                         m_lives;
+    CCLabelTTF                  *m_cutsLabel;
+    
+    float                       m_timeCurrent;
+    float                       m_timePrevious;
+    
+    unsigned int                m_swooshEffectId;
 };
 
 #endif // __FruitsViewController__OBJECT_H__

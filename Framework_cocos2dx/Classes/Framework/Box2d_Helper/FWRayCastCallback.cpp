@@ -33,14 +33,13 @@ float32 FWRayCastCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point
         polygonSprite->setEntryPoint(polygonSprite->getBody()->GetLocalPoint(point));
         
         double currentTime = Machtimer::currentTimeInSecond();
-        CCLOG("current time: %f", currentTime);
         // + 1 : The avaiable time is 1 scecond, which means user should finish the split in 1 second.
         polygonSprite->setSliceEntryTime(currentTime + 1);
         CCLOG("Slice Entered at world coordinates:(%f,%f), polygon coordinates:(%f,%f)",
-              point.x*PTM_RATIO,
-              point.y*PTM_RATIO,
-              polygonSprite->getEntryPoint().x * PTM_RATIO,
-              polygonSprite->getEntryPoint().y*PTM_RATIO);
+              point.x*FWBox2dHelper::pixelsToMeterRatio(),
+              point.y*FWBox2dHelper::pixelsToMeterRatio(),
+              polygonSprite->getEntryPoint().x * FWBox2dHelper::pixelsToMeterRatio(),
+              polygonSprite->getEntryPoint().y*FWBox2dHelper::pixelsToMeterRatio());
     }
     else if (!polygonSprite->getSliceExited())
     {
@@ -90,7 +89,6 @@ float32 FWRayCastCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point
             {
                 polygonSprite->setEntryPoint(polygonSprite->getExitPoint());
                 double currentTime = Machtimer::currentTimeInSecond();
-                CCLOG("current time: %f", currentTime);
                 polygonSprite->setSliceEntryTime(currentTime + 1);
                 polygonSprite->setSliceExited(false);
             }
@@ -101,10 +99,10 @@ float32 FWRayCastCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point
         }
         
         CCLOG("Slice Exited at world coordinates:(%f,%f), polygon coordinates:(%f,%f)",
-              point.x*PTM_RATIO,
-              point.y*PTM_RATIO, 
-              polygonSprite->getExitPoint().x*PTM_RATIO,
-              polygonSprite->getExitPoint().y*PTM_RATIO);
+              point.x*FWBox2dHelper::pixelsToMeterRatio(),
+              point.y*FWBox2dHelper::pixelsToMeterRatio(), 
+              polygonSprite->getExitPoint().x*FWBox2dHelper::pixelsToMeterRatio(),
+              polygonSprite->getExitPoint().y*FWBox2dHelper::pixelsToMeterRatio());
     }
     // Lastly, you return 1 to tell Box2D that this ray cast should continue to check
     // for fixtures even after the first fixture. Returning other numbers will make the

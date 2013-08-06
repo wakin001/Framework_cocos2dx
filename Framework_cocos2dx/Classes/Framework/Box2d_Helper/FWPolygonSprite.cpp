@@ -70,8 +70,8 @@ bool FWPolygonSprite::initWithTexture(CCTexture2D *texture, b2Body *body, bool o
     Vector2dVector points;
     for (int i = 0; i < vertexCount; i++)
     {
-        Vector2d point(shape->GetVertex(i).x * PTM_RATIO,
-                       shape->GetVertex(i).y * PTM_RATIO);
+        Vector2d point(shape->GetVertex(i).x * FWBox2dHelper::pixelsToMeterRatio(),
+                       shape->GetVertex(i).y * FWBox2dHelper::pixelsToMeterRatio());
         points.push_back(point);
     }
     
@@ -84,8 +84,8 @@ bool FWPolygonSprite::initWithTexture(CCTexture2D *texture, b2Body *body, bool o
         m_centroid = m_body->GetLocalCenter();
         
         // assign an anchor point base on the center.
-        setAnchorPoint(CCPoint(m_centroid.x * PTM_RATIO / texture->getContentSize().width,
-                               m_centroid.y * PTM_RATIO / texture->getContentSize().height));
+        setAnchorPoint(CCPoint(m_centroid.x * FWBox2dHelper::pixelsToMeterRatio() / texture->getContentSize().width,
+                               m_centroid.y * FWBox2dHelper::pixelsToMeterRatio() / texture->getContentSize().height));
         return true;
     }
     return false;
@@ -167,7 +167,7 @@ void FWPolygonSprite::deactivateCollisions()
 void FWPolygonSprite::setPosition(const CCPoint &position)
 {
     PRFilledPolygon::setPosition(position);
-    m_body->SetTransform(b2Vec2(position.x / PTM_RATIO, position.y / PTM_RATIO), m_body->GetAngle());
+    m_body->SetTransform(b2Vec2(position.x / FWBox2dHelper::pixelsToMeterRatio(), position.y / FWBox2dHelper::pixelsToMeterRatio()), m_body->GetAngle());
 }
 
 /**
@@ -177,8 +177,8 @@ CCAffineTransform FWPolygonSprite::nodeToParentTransform(void)
 {
     b2Vec2 pos  = m_body->GetPosition();
     
-    float x = pos.x * PTM_RATIO;
-    float y = pos.y * PTM_RATIO;
+    float x = pos.x * FWBox2dHelper::pixelsToMeterRatio();
+    float y = pos.y * FWBox2dHelper::pixelsToMeterRatio();
     
     if ( isIgnoreAnchorPointForPosition() )
     {

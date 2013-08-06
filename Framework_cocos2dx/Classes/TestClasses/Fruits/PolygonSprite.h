@@ -55,6 +55,7 @@ public:
 public:
     CC_SYNTHESIZE(STATE_FRUITS, m_state, State);
     CC_SYNTHESIZE(TYPE_FRUITS, m_type, Type);
+    CC_SYNTHESIZE(CCParticleSystemQuad *, m_splurt, Splurt);
     
 protected:
     

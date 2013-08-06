@@ -11,7 +11,7 @@
 		731D66F017A65B52005998CE /* fruits.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66BF17A65B52005998CE /* fruits.plist */; };
 		731D66F117A65B52005998CE /* banana_splurt.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C117A65B52005998CE /* banana_splurt.plist */; };
 		731D66F217A65B52005998CE /* blade_sparkle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C217A65B52005998CE /* blade_sparkle.plist */; };
-		731D66F317A65B52005998CE /* explosion.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C317A65B52005998CE /* explosion.plist */; };
+		731D66F317A65B52005998CE /* bomb_splurt.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C317A65B52005998CE /* bomb_splurt.plist */; };
 		731D66F417A65B52005998CE /* grapes_splurt.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C417A65B52005998CE /* grapes_splurt.plist */; };
 		731D66F517A65B52005998CE /* pineapple_splurt.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C517A65B52005998CE /* pineapple_splurt.plist */; };
 		731D66F617A65B52005998CE /* strawberry_splurt.plist in Resources */ = {isa = PBXBuildFile; fileRef = 731D66C617A65B52005998CE /* strawberry_splurt.plist */; };
@@ -30,6 +30,7 @@
 		731D670B17A6618D005998CE /* PRRatcliffTriangulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670617A6618D005998CE /* PRRatcliffTriangulator.cpp */; };
 		731D670C17A6618D005998CE /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670817A6618D005998CE /* triangulate.cpp */; };
 		731D671017A663E0005998CE /* FWPolygonSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D670E17A663E0005998CE /* FWPolygonSprite.cpp */; };
+		731D7EAF17B1086D00C999B4 /* FWBox2dHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 731D7EAD17B1086C00C999B4 /* FWBox2dHelper.cpp */; };
 		7320501C17742606006BDE45 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7320501B17742606006BDE45 /* Default-568h@2x.png */; };
 		7320AE6B1772D933008EF0FF /* FWGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7320AE691772D932008EF0FF /* FWGame.cpp */; };
 		7320AE6E1772DB23008EF0FF /* FWDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7320AE6C1772DB23008EF0FF /* FWDevice.cpp */; };
@@ -394,7 +395,7 @@
 		731D66BF17A65B52005998CE /* fruits.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = fruits.plist; sourceTree = "<group>"; };
 		731D66C117A65B52005998CE /* banana_splurt.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = banana_splurt.plist; sourceTree = "<group>"; };
 		731D66C217A65B52005998CE /* blade_sparkle.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = blade_sparkle.plist; sourceTree = "<group>"; };
-		731D66C317A65B52005998CE /* explosion.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = explosion.plist; sourceTree = "<group>"; };
+		731D66C317A65B52005998CE /* bomb_splurt.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = bomb_splurt.plist; sourceTree = "<group>"; };
 		731D66C417A65B52005998CE /* grapes_splurt.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = grapes_splurt.plist; sourceTree = "<group>"; };
 		731D66C517A65B52005998CE /* pineapple_splurt.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pineapple_splurt.plist; sourceTree = "<group>"; };
 		731D66C617A65B52005998CE /* strawberry_splurt.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = strawberry_splurt.plist; sourceTree = "<group>"; };
@@ -417,6 +418,8 @@
 		731D670917A6618D005998CE /* triangulate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulate.h; sourceTree = "<group>"; };
 		731D670E17A663E0005998CE /* FWPolygonSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FWPolygonSprite.cpp; path = Box2d_Helper/FWPolygonSprite.cpp; sourceTree = "<group>"; };
 		731D670F17A663E0005998CE /* FWPolygonSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWPolygonSprite.h; path = Box2d_Helper/FWPolygonSprite.h; sourceTree = "<group>"; };
+		731D7EAD17B1086C00C999B4 /* FWBox2dHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FWBox2dHelper.cpp; path = Box2d_Helper/FWBox2dHelper.cpp; sourceTree = "<group>"; };
+		731D7EAE17B1086C00C999B4 /* FWBox2dHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWBox2dHelper.h; path = Box2d_Helper/FWBox2dHelper.h; sourceTree = "<group>"; };
 		7320501B17742606006BDE45 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 		7320AE691772D932008EF0FF /* FWGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FWGame.cpp; sourceTree = "<group>"; };
 		7320AE6A1772D932008EF0FF /* FWGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWGame.h; sourceTree = "<group>"; };
@@ -1173,7 +1176,7 @@
 			children = (
 				731D66C117A65B52005998CE /* banana_splurt.plist */,
 				731D66C217A65B52005998CE /* blade_sparkle.plist */,
-				731D66C317A65B52005998CE /* explosion.plist */,
+				731D66C317A65B52005998CE /* bomb_splurt.plist */,
 				731D66C417A65B52005998CE /* grapes_splurt.plist */,
 				731D66C517A65B52005998CE /* pineapple_splurt.plist */,
 				731D66C617A65B52005998CE /* strawberry_splurt.plist */,
@@ -1231,6 +1234,8 @@
 				7335E12D17A7B7C80085F039 /* FWPhysicsViewController.h */,
 				7335E13217A7BF7F0085F039 /* FWRayCastCallback.cpp */,
 				7335E13317A7BF7F0085F039 /* FWRayCastCallback.h */,
+				731D7EAD17B1086C00C999B4 /* FWBox2dHelper.cpp */,
+				731D7EAE17B1086C00C999B4 /* FWBox2dHelper.h */,
 			);
 			name = Box2d_Helper;
 			sourceTree = "<group>";
@@ -2789,7 +2794,7 @@
 				731D66F017A65B52005998CE /* fruits.plist in Resources */,
 				731D66F117A65B52005998CE /* banana_splurt.plist in Resources */,
 				731D66F217A65B52005998CE /* blade_sparkle.plist in Resources */,
-				731D66F317A65B52005998CE /* explosion.plist in Resources */,
+				731D66F317A65B52005998CE /* bomb_splurt.plist in Resources */,
 				731D66F417A65B52005998CE /* grapes_splurt.plist in Resources */,
 				731D66F517A65B52005998CE /* pineapple_splurt.plist in Resources */,
 				731D66F617A65B52005998CE /* strawberry_splurt.plist in Resources */,
@@ -3136,6 +3141,7 @@
 				7335E13417A7BF7F0085F039 /* FWRayCastCallback.cpp in Sources */,
 				7335E13717A7C4320085F039 /* Machtimer.cpp in Sources */,
 				73464CC317AF8AEB00E8C542 /* PolygonSprite.cpp in Sources */,
+				731D7EAF17B1086D00C999B4 /* FWBox2dHelper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
