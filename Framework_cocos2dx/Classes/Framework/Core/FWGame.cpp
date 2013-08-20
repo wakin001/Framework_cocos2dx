@@ -40,56 +40,52 @@ void FWGame::setupScreenResolution()
     CCDirector *pDirector = CCDirector::sharedDirector();
     CCSize screenSize = CCEGLView::sharedOpenGLView()->getFrameSize();
     std::vector<std::string> searchPaths;
-    std::vector<std::string> resDirOrders;
     
     // Set
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)     // iOS platform
     
-    searchPaths.push_back("Published-iOS"); // Resources/Published-iOS
-    
     if (m_device->isIPhoneRetina())
     {
+        CCLOG("is iphone retina.");
         //3.5-inch
-        resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
-        resDirOrders.push_back("resources-iphone");
+        searchPaths.push_back("./images/iphonehd");  //Resources/Published-iOS/resources-iphonehd
         
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                                kResolutionNoBorder);
-        
         pDirector->setContentScaleFactor(2.0f);         //2倍のスケールサイズ
     }
     else if (m_device->isIPhone5()) // 4-inch
     {
-        resDirOrders.push_back("resources-iphonehd");  //Resources/Published-iOS/resources-iphonehd
+        CCLOG("is iphone 5.");
+        searchPaths.push_back("./images/iphonehd");  //Resources/Published-iOS/resources-iphonehd
         
-        pDirector->setContentScaleFactor(2.f);         //2倍のスケールサイズ
+        
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE5_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
-                                                               kResolutionShowAll);
+                                                               kResolutionNoBorder);
+        pDirector->setContentScaleFactor(2.f);         //2倍のスケールサイズ
     }
     else if (m_device->isIPhone())
     {
-        resDirOrders.push_back("resources-iphone");  //Resources/Published-iOS/resources-iphone
-        resDirOrders.push_back("resources-iphonehd");
+        CCLOG("is iphone3GS.");
+        searchPaths.push_back("./images/iphone");  //Resources/Published-iOS/resources-iphone
         
         CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                                FWD_IPHONE_LANDSCAPE_HEIGHT,
-                                                               kResolutionShowAll);
-        
+                                                               kResolutionNoBorder);
+        pDirector->setContentScaleFactor(1.0f);
     }
 
 #else        // Other plateform. (Android...)
 
-    searchPaths.push_back("Published-iOS"); // Resources/Published-iOS
-    resDirOrders.push_back("resources-iphone");
+    searchPaths.push_back("./images"); // Resources/Published-iOS
     CCEGLView::sharedOpenGLView()->setDesignResolutionSize(FWD_IPHONE_LANDSCAPE_WIDTH,
                                                            FWD_IPHONE_LANDSCAPE_HEIGHT,
                                                            kResolutionExactFit);
 
 #endif
-    
+    // About search path, please check: http://www.cocos2d-x.org/projects/cocos2d-x/wiki/Mechanism_of_loading_resources
     CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
-    CCFileUtils::sharedFileUtils()->setSearchResolutionsOrder(resDirOrders);
 }
 

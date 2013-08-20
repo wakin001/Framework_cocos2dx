@@ -37,5 +37,7 @@ float FWBox2dHelper::pointsToMeterRatio()
 
 float FWBox2dHelper::pixelsToMeterRatio()
 {
-    return (CC_CONTENT_SCALE_FACTOR() * kPointsToMeterRatio);
+    float ratio = (CC_CONTENT_SCALE_FACTOR() * kPointsToMeterRatio);
+//    CCLOG("ratio: %f", ratio);
+    return ratio;
 }

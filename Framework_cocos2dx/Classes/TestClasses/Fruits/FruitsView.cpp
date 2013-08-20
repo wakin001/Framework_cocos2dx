@@ -56,44 +56,31 @@ void FruitsView::initSprites(b2World *world)
     m_cache = CCArray::createWithCapacity(53);
     m_cache->retain();
     
-    for (int i = 0; i < 10; i++)
+    TYPE_FRUITS types[] = {
+        TYPE_FRUITS_WATERMELON,
+        TYPE_FRUITS_STRAWBERRY,
+        TYPE_FRUITS_PINEAPPLE,
+        TYPE_FRUITS_GRAPES,
+        TYPE_FRUITS_BANANA
+    };
+    const char *names[] = {
+        "watermelon",
+        "strawberry",
+        "pineapple",
+        "grapes",
+        "banana",
+    };
+    
+    for (int j = 0; j < 5; ++j)
     {
-        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_WATERMELON, "watermelon");
-        sprite->setPosition(ccp(-64*(i+1),-64));
-        addChild(sprite, 1);
-        addChild(sprite->getSplurt(), 3);
-        m_cache->addObject(sprite);
-    }
-    for (int i = 0; i < 10; i++)
-    {
-        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_STRAWBERRY, "strawberry");
-        sprite->setPosition(ccp(-64*(i+1),-64));
-        addChild(sprite, 1);
-        addChild(sprite->getSplurt(), 3);
-        m_cache->addObject(sprite);
-    }
-    for (int i = 0; i < 10; i++)
-    {
-        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_PINEAPPLE, "pineapple");
-        sprite->setPosition(ccp(-64*(i+1),-64));
-        addChild(sprite, 1);
-        addChild(sprite->getSplurt(), 3);
-        m_cache->addObject(sprite);
-    }
-    for (int i = 0; i < 10; i++)
-    {
-        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_GRAPES, "grapes");
-        sprite->setPosition(ccp(-64*(i+1),-64));
-        addChild(sprite, 1);
-        m_cache->addObject(sprite);
-    }
-    for (int i = 0; i < 10; i++)
-    {
-        PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, TYPE_FRUITS_BANANA, "banana");
-        sprite->setPosition(ccp(-64*(i+1),-64));
-        addChild(sprite, 1);
-        addChild(sprite->getSplurt(), 3);
-        m_cache->addObject(sprite);
+        for (int i = 0; i < 10; i++)
+        {
+            PolygonSprite *sprite = PolygonSprite::spriteWithWorld(world, types[j], names[j]);
+            sprite->setPosition(ccp(-64*(i+1),-64));
+            addChild(sprite, 1);
+            addChild(sprite->getSplurt(), 3);
+            m_cache->addObject(sprite);
+        }
     }
     
     for (int i = 0; i < 3; i++)
