@@ -49,19 +49,10 @@ void FWAbstractView::onNotificationCalled(CCNotificationObserver *pNotification)
 /**
  * Get the touch point.
  */
-cocos2d::CCPoint FWAbstractView::locationFromTouch(CCTouch *pTouch)
-{
-    cocos2d::CCPoint touchLocation = pTouch->getLocation();
-    return CCDirector::sharedDirector()->convertToGL(touchLocation);
-}
-
-/**
- * Get the touch point.
- */
 cocos2d::CCPoint FWAbstractView::locationFromTouches(CCSet *pTouches)
 {
     CCTouch *pTouch = (CCTouch *)pTouches->anyObject();
-    return locationFromTouch(pTouch);
+    return pTouch->getLocation();
 }
 
 /**
@@ -74,7 +65,7 @@ void FWAbstractView::onUpdateWithInterval(float fInterval)
 }
 
 
-void FWAbstractView::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
+void FWAbstractView::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
     CCPoint point = locationFromTouches(pTouches);
     m_delegate->touchesBeganWithPoint(point, pEvent);
@@ -96,4 +87,9 @@ void FWAbstractView::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEve
 {
     CCPoint point = locationFromTouches(pTouches);
     m_delegate->touchesCancelledWithPoint(point, pEvent);
+}
+
+void FWAbstractView::onNodeTouched(cocos2d::CCNode *sender)
+{
+    m_delegate->onNodeTouched(sender);
 }

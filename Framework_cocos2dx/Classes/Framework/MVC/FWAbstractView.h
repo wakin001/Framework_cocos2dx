@@ -57,11 +57,6 @@ public:
     /**
      * Get the touch point.
      */
-    cocos2d::CCPoint                locationFromTouch(cocos2d::CCTouch *touch);
-    
-    /**
-     * Get the touch point.
-     */
     cocos2d::CCPoint                locationFromTouches(cocos2d::CCSet *touches);
     
     /**
@@ -74,6 +69,8 @@ public:
     virtual void                    ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
     virtual void                    ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
     virtual void                    ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+    
+    virtual void                    onNodeTouched(cocos2d::CCNode *sender);
     
 public:
     /**

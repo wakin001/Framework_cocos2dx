@@ -14,6 +14,7 @@
 #include "GameViewController.h"
 #include "FirstScene.h"
 #include "FWGame.h"
+#include "FruitsViewController.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -54,13 +55,17 @@ bool AppDelegate::applicationDidFinishLaunching()
     CCLOG("visibleOrigin : %f, %f", visibleOrigin.width, visibleOrigin.height);
 
     // create a scene. it's an autorelease object
-//    FirstScene *pScene = FirstScene::create();
-//    // run
-//    pDirector->runWithScene(pScene);
+    FirstScene *pScene = FirstScene::create();
     
-    GameViewController *mainScene = GameViewController::create();
-    pDirector->runWithScene(mainScene);
-
+//    FruitsViewController *pScene = FruitsViewController::create();
+    // run
+    pDirector->runWithScene(pScene);
+    
+//    GameViewController *mainScene = GameViewController::create();
+//    pDirector->runWithScene(mainScene);
+    
+//    pDirector->runWithScene(HelloWorld::scene());
+    
     return true;
 }
 

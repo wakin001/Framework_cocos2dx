@@ -11,6 +11,7 @@
 // When you import this file, you import all the cocos2d classes
 #include "cocos2d.h"
 #include "Box2D.h"
+#include "GLES-Render.h"
 
 class PhysicsSprite : public cocos2d::CCSprite
 {
@@ -42,6 +43,7 @@ public:
 private:
     b2World* world;
     cocos2d::CCTexture2D* m_pSpriteTexture; // weak ref
+    cocos2d::extension::GLESDebugDraw    *m_debugDraw;
 };
 
 #endif // __HELLO_WORLD_H__

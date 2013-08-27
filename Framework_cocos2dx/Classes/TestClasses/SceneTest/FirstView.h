@@ -9,6 +9,8 @@
 #ifndef __FirstView__OBJECT_H__
 #define __FirstView__OBJECT_H__
 
+#define TAG_FRUITSGAME          100
+
 #include "cocos2d.h"
 #include "FWAbstractView.h"
 #include "FirstModel.h"
@@ -24,8 +26,6 @@ public:
     CREATE_FUNC_TWO_PARAMETERS(FirstView, FWAbstractModel*, model, FWAbstractViewDelegate*, delegate);
 
     virtual bool                    init(FWAbstractModel *model = NULL, FWAbstractViewDelegate *delegate = NULL);
-    
-    void                            onBackButtonClicked();
     
     virtual void                    ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
     

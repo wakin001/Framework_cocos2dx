@@ -12,6 +12,7 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 #include "HttpClient.h"
+#include "FruitsViewController.h"
 
 using namespace cocos2d;
 using namespace cocos2d::extension;
@@ -22,16 +23,22 @@ FirstScene::FirstScene()
 
 FirstScene::~FirstScene()
 {
+    CC_SAFE_RELEASE(m_model);
 }
 
 bool FirstScene::init(FWAbstractModel * model)
 {
+    if (!FWAbstractViewController::init(model))
+    {
+        return false;
+    }
+    
     // Don't need set model if model is not NULL, since we have done it in super class.
     if (NULL == model)
     {
         m_model = FirstModel::create();
-        m_model->retain();
     }
+    m_model->retain();
     
     m_view = FirstView::create(m_model, this);
     addChild(m_view);
@@ -72,3 +79,15 @@ void FirstScene::onHttpRequestCompleted(cocos2d::CCObject *pSender, void *data)
     delete response->getHttpRequest();
 }
 
+void FirstScene::onNodeTouched(cocos2d::CCNode *pNode)
+{
+    switch (pNode->getTag()) {
+        case TAG_FRUITSGAME:
+            replaceScene(FruitsViewController::create());
+//            CCDirector::sharedDirector()->replaceScene(FruitsViewController::create());
+            break;
+            
+        default:
+            break;
+    }
+}

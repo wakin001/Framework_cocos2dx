@@ -55,17 +55,17 @@ public:
     /**
      * Replace scene with transition. Do not add it to stack.
      */
-    void                        replaceScene(FWAbstractViewController *scene, FWE_TRANSITION transitionId = FWE_TRANS_FADE);
+    void                        replaceScene(FWAbstractViewController *scene, FWE_TRANSITION transitionId = FWE_TRANS_RIGHTIN);
     
     /**
      * Push scene with the transition to the scene stack.
      */
-    void                        pushScene(FWAbstractViewController *scene, FWE_TRANSITION transitionId = FWE_TRANS_FADE);
+    void                        pushScene(FWAbstractViewController *scene, FWE_TRANSITION transitionId = FWE_TRANS_RIGHTIN);
     
     /**
      * Pop up a scene with transition.
      */
-    void                        popScene(FWE_TRANSITION transitionId = FWE_TRANS_FADE);
+    void                        popScene(FWE_TRANSITION transitionId = FWE_TRANS_RIGHTIN);
     
     /**
      * Pop up stack top with no tranistion.
@@ -133,6 +133,8 @@ public:
      *  If there is one scene in SceneStacks, return nil
      */
 //    Class                       previousSceneClass();
+    
+    virtual void                update(float delta);
     
 
 public:

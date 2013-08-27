@@ -29,6 +29,8 @@ public:
     void                        testURLRequest();
     void                        onHttpRequestCompleted(cocos2d::CCObject *pSender, void *data);
     
+    virtual void                onNodeTouched(cocos2d::CCNode *pNode);
+
 private:
     
 };

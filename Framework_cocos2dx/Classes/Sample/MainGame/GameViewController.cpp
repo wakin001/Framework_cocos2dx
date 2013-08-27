@@ -18,8 +18,8 @@ GameViewController::GameViewController()
 
 GameViewController::~GameViewController()
 {
-    CC_SAFE_DELETE(m_model);
-    CC_SAFE_DELETE(m_view);
+    CC_SAFE_RELEASE(m_model);
+    CC_SAFE_RELEASE(m_view);
 }
 
 

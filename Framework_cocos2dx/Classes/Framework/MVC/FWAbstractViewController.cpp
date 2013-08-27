@@ -25,8 +25,6 @@ FWAbstractViewController::FWAbstractViewController(FWAbstractModel * model) :
 
 FWAbstractViewController::~FWAbstractViewController()
 {
-    CC_SAFE_RELEASE(m_model);
-    CC_SAFE_RELEASE(m_view);
 }
 
 #pragma mark - Create function
@@ -34,12 +32,8 @@ FWAbstractViewController::~FWAbstractViewController()
 bool FWAbstractViewController::init(FWAbstractModel *model)
 {
     m_model = model;
-    if (m_model != NULL)
-    {
-        m_model->retain();
-    }
-    
-    m_transitionId = FWE_TRANS_FADE;
+
+    m_transitionId = FWE_TRANS_RIGHTIN;
     
     m_isDataLoaded = true;
     m_changeSceneType = FWE_CHANGESCENE_TYPE_PUSH;
@@ -100,8 +94,12 @@ void FWAbstractViewController::executeChangingScene()
     CCTransitionScene *pTranScene = NULL;
     switch (m_transitionId)
     {
-        case FWE_TRANS_FADE:
-            pTranScene = CCTransitionScene::create(FWD_TRANSITION_TIME, m_nextScene);
+        case FWE_TRANS_RIGHTIN:
+            pTranScene = CCTransitionMoveInR::create(FWD_TRANSITION_TIME, m_nextScene);
+            break;
+            
+        case FWE_TRANS_LEFTIN:
+            pTranScene = CCTransitionMoveInL::create(FWD_TRANSITION_TIME, m_nextScene);
             break;
             
         default:
@@ -204,7 +202,7 @@ void FWAbstractViewController::clearAllScenesExceptSelf()
  */
 void FWAbstractViewController::showLoadingView()
 {
-    m_isDataLoaded = false;
+//    m_isDataLoaded = false;
 //    [[FWLoadingViewManager sharedManager] showLoadingView];
 }
 
@@ -278,6 +276,11 @@ void FWAbstractViewController::onEnterSuper()
 void FWAbstractViewController::setBGM()
 {
     
+}
+
+void FWAbstractViewController::update(float delta)
+{
+    m_view->update(delta);
 }
 
 /**
