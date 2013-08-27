@@ -55,9 +55,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     CCLOG("visibleOrigin : %f, %f", visibleOrigin.width, visibleOrigin.height);
 
     // create a scene. it's an autorelease object
-//    FirstScene *pScene = FirstScene::create();
+    FirstScene *pScene = FirstScene::create();
     
-    FruitsViewController *pScene = FruitsViewController::create();
+//    FruitsViewController *pScene = FruitsViewController::create();
     // run
     pDirector->runWithScene(pScene);
     

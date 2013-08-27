@@ -70,6 +70,8 @@ public:
     virtual void                    ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
     virtual void                    ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
     
+    virtual void                    onNodeTouched(cocos2d::CCNode *sender);
+    
 public:
     /**
      * Macro Set/Get methods. 

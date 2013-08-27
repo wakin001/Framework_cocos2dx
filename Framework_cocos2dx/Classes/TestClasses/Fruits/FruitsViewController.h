@@ -50,6 +50,7 @@ public:
     virtual bool                touchesBeganWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
     virtual void                touchesMoveWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
     virtual void                touchesEndWithPoint(cocos2d::CCPoint point, cocos2d::CCEvent *pEvent);
+    virtual void                onNodeTouched(cocos2d::CCNode *pNode);
     
     void                        initHUD();
     void                        restart();

@@ -65,7 +65,7 @@ void FWAbstractView::onUpdateWithInterval(float fInterval)
 }
 
 
-void FWAbstractView::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
+void FWAbstractView::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
     CCPoint point = locationFromTouches(pTouches);
     m_delegate->touchesBeganWithPoint(point, pEvent);
@@ -87,4 +87,9 @@ void FWAbstractView::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEve
 {
     CCPoint point = locationFromTouches(pTouches);
     m_delegate->touchesCancelledWithPoint(point, pEvent);
+}
+
+void FWAbstractView::onNodeTouched(cocos2d::CCNode *sender)
+{
+    m_delegate->onNodeTouched(sender);
 }

@@ -48,6 +48,25 @@ void FruitsView::initBackground()
     
     CCParticleSystemQuad *sunPollen = CCParticleSystemQuad::create("sun_pollen.plist");
     addChild(sunPollen);
+    
+    // Add back button.
+    CCSize visibleOrigin = CCDirector::sharedDirector()->getVisibleOrigin();
+    CCMenuItemImage *pmiiBack = CCMenuItemImage::create("btn.png",
+                                                        "btn.png",
+                                                        "btn.png",
+                                                        this,
+                                                        menu_selector(FWAbstractView::onNodeTouched));
+    pmiiBack->setTag(TAG_BUTTON_BACK);
+    CCPoint point = ccp(winSize.width / 2 - pmiiBack->getContentSize().width / 2 - visibleOrigin.width,
+                        -winSize.height / 2 + pmiiBack->getContentSize().height / 2 - visibleOrigin.height);
+    pmiiBack->setPosition(point);
+    CCMenu *pmMenu = CCMenu::create(pmiiBack, NULL);
+    addChild(pmMenu);
+    
+    CCLabelTTF *label = CCLabelTTF::create("BACK", "Arial", 12);
+    label->setPosition(ccp(pmiiBack->getContentSize().width * 0.5f,
+                           pmiiBack->getContentSize().height * 0.5f));
+    pmiiBack->addChild(label);
 }
 
 void FruitsView::initSprites(b2World *world)

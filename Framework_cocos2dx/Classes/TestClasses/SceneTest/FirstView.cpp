@@ -40,19 +40,32 @@ bool FirstView::init(FWAbstractModel *model, FWAbstractViewDelegate *delegate)
     
     // back button.
     CCSize visibleOrigin = CCDirector::sharedDirector()->getVisibleOrigin();
-    CCMenuItemImage *pmiiBack = CCMenuItemImage::create("btn.png", "btn.png", "btn.png", this, menu_selector(FirstView::onBackButtonClicked));
+    CCMenuItemImage *pmiiBack = CCMenuItemImage::create("btn.png",
+                                                        "btn.png",
+                                                        "btn.png",
+                                                        this,
+                                                        menu_selector(FWAbstractView::onNodeTouched));
+    pmiiBack->setTag(TAG_FRUITSGAME);
     CCPoint point = ccp(screenSize.width / 2 - pmiiBack->getContentSize().width / 2 - visibleOrigin.width,
                         -screenSize.height / 2 + pmiiBack->getContentSize().height / 2 - visibleOrigin.height);
     pmiiBack->setPosition(point);
     CCMenu *pmMenu = CCMenu::create(pmiiBack, NULL);
     addChild(pmMenu);
     
+    CCLabelTTF *label = CCLabelTTF::create("Fruit", "Arial", 12);
+    label->setPosition(ccp(pmiiBack->getContentSize().width * 0.5f,
+                           pmiiBack->getContentSize().height * 0.5f));
+    pmiiBack->addChild(label);
+    
     setTouchEnabled(true);    
     return true;
 }
 
-void FirstView::onBackButtonClicked()
+
+void FirstView::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
 {
+    FWAbstractView::ccTouchesBegan(pTouches, pEvent);
+
     // Add effect.
     FWEffectSprite *penBurst = FWEffectSprite::create("effect_burst", 7, 0.05f, true);
     penBurst->setPosition(ccp(100.0f, 100.0f));
@@ -60,17 +73,13 @@ void FirstView::onBackButtonClicked()
     
     CCSize winsize = CCDirector::sharedDirector()->getWinSize();
     FWActionEffect *paeEffect = FWActionEffect::create("effect_burst",
-                                                             7,
-                                                             ccp(0.2f, 0.5f),
-                                                             CCRectMake(0, 0, winsize.width, winsize.height),
-                                                             ccBLUE,
-                                                             300.0f,
-                                                             0.02f,
-                                                             0.02f);
+                                                       7,
+                                                       ccp(0.2f, 0.5f),
+                                                       CCRectMake(0, 0, winsize.width, winsize.height),
+                                                       ccBLUE,
+                                                       300.0f,
+                                                       0.02f,
+                                                       0.02f);
     addChild(paeEffect);
-}
-
-void FirstView::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent)
-{
-    onBackButtonClicked();
+    
 }

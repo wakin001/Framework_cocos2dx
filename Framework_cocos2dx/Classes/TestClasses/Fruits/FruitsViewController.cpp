@@ -9,6 +9,7 @@
 #include "FruitsViewController.h"
 #include "Machtimer.h"
 #include "PolygonSprite.h"
+#include "FirstScene.h"
 
 using namespace cocos2d;
 
@@ -178,6 +179,18 @@ void FruitsViewController::initHUD()
     m_cutsLabel->setPosition(ccp(cutsIcon->getPosition().x + cutsIcon->getContentSize().width / 2 + m_cutsLabel->getContentSize().width / 2,
                                  cutsIcon->getPosition().y));
     addChild(m_cutsLabel, 4);
+}
+
+void FruitsViewController::onNodeTouched(cocos2d::CCNode *pNode)
+{
+    switch (pNode->getTag()) {
+        case TAG_BUTTON_BACK:
+            replaceScene(FirstScene::create(), FWE_TRANS_LEFTIN);
+            break;
+            
+        default:
+            break;
+    }
 }
 
 void FruitsViewController::restart()

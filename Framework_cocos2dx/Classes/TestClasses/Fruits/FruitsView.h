@@ -9,6 +9,8 @@
 #ifndef __FruitsView__OBJECT_H__
 #define __FruitsView__OBJECT_H__
 
+#define TAG_BUTTON_BACK            1001
+
 #include "cocos2d.h"
 #include "FruitsModel.h"
 #include "FWAbstractView.h"
